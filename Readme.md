@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Dmitry Pulsha](https://up.htmlacademy.ru/nodejs-2/2/user/1599147).
-* Наставник: `Неизвестно`.
+*  Наставник: [Михаил Кислый](https://up.htmlacademy.ru/nodejs-2/2/user/1118577).
 
 ---
 
