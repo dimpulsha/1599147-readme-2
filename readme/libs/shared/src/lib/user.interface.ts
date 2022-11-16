@@ -4,7 +4,7 @@ export interface UserInterface {
   firstName: string;
   lastName: string;
   avatarImg: string;
-  publication: number;
+  publicationCount: number;
   friends: number;
   registrationDate: Date;
   passwordHash: string;
