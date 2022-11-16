@@ -2,7 +2,9 @@ import { CRUDInterface } from '@readme/core';
 import { UserInterface } from '@readme/shared';
 import { BlogUserEntity } from './blog-user.entity';
 import * as crypto from 'crypto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BlogUserMemoryRepository implements CRUDInterface<BlogUserEntity, string, UserInterface> {
 
   private repository: {[key: string]: UserInterface} = {}
