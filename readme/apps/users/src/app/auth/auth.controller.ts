@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 
@@ -12,16 +12,36 @@ export class AuthController {
     Logger.log('accept request auth/register');
     return this.authService.register(dto);
 
-    // return ({ "message": "resister request accepted" });
-
 }
 
-  @Post('')
+  @Post('login')
   @HttpCode(HttpStatus.OK)
   public async login() {
-    Logger.log('accept login auth/');
+    Logger.log('accept request auth/login');
     return ({ "message": "login request accepted" });
 
+  }
+
+  @Get(':id')
+  public async getUser() {
+    Logger.log('accept Get request auth/:id');
+    return ({ "message": "info request accepted" });
+
+  }
+
+  @Post(':id')
+  @HttpCode(HttpStatus.OK)
+  public async checkUser() {
+    Logger.log('accept Post request auth/:id');
+    return ({ "message": "check request accepted" });
+
+  }
+
+  @Patch('update/:id')
+  @HttpCode(HttpStatus.OK)
+  public async update() {
+    Logger.log('accept update auth/update/:id');
+    return ({ "message": "update request accepted" });
 
   }
 
