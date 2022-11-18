@@ -1,6 +1,12 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post } from '@nestjs/common';
+import { fillObject } from '@readme/core';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
+import { LoginUserDTO } from './dto/login-user.dto';
+import { LoggedUserRDO } from './rdo/logged-user.rdo';
+import { UserInfoRDO } from './rdo/user-info.rdo';
+import { AUTH_LOGIN_WRONG, METHOD_NOT_IMPLEMENTED } from './auth-constant';
+
 
 @Controller('auth')
 export class AuthController {
@@ -10,22 +16,29 @@ export class AuthController {
   @Post('register')
   public async create(@Body() dto: CreateUserDTO) {
     Logger.log('accept request auth/register');
-    return this.authService.register(dto);
+    const newUser = this.authService.register(dto);
+    return fillObject(UserInfoRDO, newUser);
 
 }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login() {
+  public async login(@Body() dto: LoginUserDTO) {
     Logger.log('accept request auth/login');
-    return ({ "message": "login request accepted" });
+    const result = this.authService.verifyUser(dto);
+    if (!result) {
+      return AUTH_LOGIN_WRONG;
+    }
+
+    return fillObject(LoggedUserRDO, result )
 
   }
 
   @Get(':id')
-  public async getUser() {
+  public async getUser(@Param('id') id: string) {
     Logger.log('accept Get request auth/:id');
-    return ({ "message": "info request accepted" });
+    const result = this.authService.getUser(id);
+    return fillObject(UserInfoRDO, result);
 
   }
 
@@ -33,7 +46,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public async checkUser() {
     Logger.log('accept Post request auth/:id');
-    return ({ "message": "check request accepted" });
+    return (METHOD_NOT_IMPLEMENTED);
 
   }
 
@@ -41,7 +54,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public async update() {
     Logger.log('accept update auth/update/:id');
-    return ({ "message": "update request accepted" });
+    return (METHOD_NOT_IMPLEMENTED);
 
   }
 

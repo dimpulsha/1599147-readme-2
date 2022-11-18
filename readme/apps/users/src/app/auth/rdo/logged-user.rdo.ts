@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 
-export class LoggedUser {
+export class LoggedUserRDO {
 
   @Expose({name: '_id'})
   public id: string;

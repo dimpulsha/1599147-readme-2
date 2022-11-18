@@ -43,13 +43,13 @@ export class AuthService {
     const existUser = await this.blogUserMemoryRepository.getByEmail(email);
     if (!existUser) {
       Logger.error(AUTH_LOGIN_WRONG);
-      return (AUTH_LOGIN_WRONG);
+      return null;
     }
 
     const blogUserEntity = new BlogUserEntity(existUser);
     if (! await blogUserEntity.comparePassword(password)) {
       Logger.error(AUTH_LOGIN_WRONG);
-      return (AUTH_LOGIN_WRONG);
+      return null;
     }
 
     return blogUserEntity.toObject();
@@ -61,8 +61,10 @@ export class AuthService {
     const existUser = await this.blogUserMemoryRepository.getById(id)
     if (!existUser) {
       Logger.error(AUTH_NOT_FOUND);
-      return (AUTH_NOT_FOUND);
+      return null;
     }
+
+    return existUser;
   }
 
   async updatePWD(dto: UpdatePasswordDTO) {
