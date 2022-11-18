@@ -1,9 +1,9 @@
 import * as dayjs from 'dayjs';
-import { Injectable } from '@nestjs/common';
-// import { UserInterface } from '@readme/shared';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { BlogUserMemoryRepository } from '../blog-user/blog-user-memory.repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
+import { AUTH_USER_EXISTS } from './auth-constant';
 
 @Injectable()
 export class AuthService {
@@ -13,9 +13,7 @@ export class AuthService {
   ) { }
 
   async register(dto: CreateUserDTO) {
-    // const { email, firstName, lastName, avatarImg, password } = dto
     const blogUser = {
-      _id: '',
       email: dto.email,
       firstName: dto.firstName,
       lastName: dto.lastName,
@@ -25,16 +23,15 @@ export class AuthService {
       registrationDate: dayjs().toDate(),
       passwordHash: ''
     }
-    const existUser = await this.blogUserMemoryRepository.getByEmail(blogUser.email);
 
-    if (existUser) {
-      throw new Error('User is already exist');
+    if (await this.blogUserMemoryRepository.getByEmail(blogUser.email)) {
+      Logger.error('AUTH_USER_EXISTS');
+      return ('AUTH_USER_EXISTS');
     }
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(dto.password);
 
     return await this.blogUserMemoryRepository.create(userEntity);
-
   }
 
 
