@@ -1,0 +1,22 @@
+#Пользователь
+## Создать пользователя
+POST http://localhost:3333/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "3@fill.com",
+  "firstName": "vova",
+  "lastName": "string",
+  "password": "123456"
+  
+}
+###
+# ## Логин
+# POST http://localhost:4390/user HTTP/1.1
+# Content-Type: application/json
+
+# {
+#   "email": "2@fill.com",
+#   "password": "123456"
+# }
+# ###

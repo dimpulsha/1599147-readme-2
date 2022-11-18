@@ -15,9 +15,13 @@ export class BlogUserEntity implements UserInterface {
 
   private static SALT_ROUNDS = 10;
 
+  constructor(blogUser: UserInterface) {
+    this.fillEntity(blogUser);
+  }
+
   public toObject() {
-    Logger.debug('BlogUserEntity: toObject');
-    Logger.debug({ ...this });
+    Logger.log('BlogUserEntity: toObject');
+    Logger.log({ ...this });
     console.log({...this});
     return { ...this };
   }
@@ -43,6 +47,5 @@ export class BlogUserEntity implements UserInterface {
     this.publicationCount = blogUser.publicationCount;
     this.registrationDate = blogUser.registrationDate;
   }
-
 
 }
