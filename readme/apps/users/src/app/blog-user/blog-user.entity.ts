@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { UserInterface } from '@readme/shared';
 import { genSalt, compare, hash } from 'bcrypt';
+import { SALT_ROUNDS } from './blog-user.constant';
 
 export class BlogUserEntity implements UserInterface {
   public _id: string;
@@ -12,8 +13,6 @@ export class BlogUserEntity implements UserInterface {
   public friends: number;
   public registrationDate: Date;
   public passwordHash: string;
-
-  private static SALT_ROUNDS = 10;
 
   constructor(blogUser: UserInterface) {
     this.fillEntity(blogUser);
@@ -27,7 +26,7 @@ export class BlogUserEntity implements UserInterface {
   }
 
   public async setPassword(password: string): Promise<BlogUserEntity> {
-    const pwdSalt = await genSalt(BlogUserEntity.SALT_ROUNDS);
+    const pwdSalt = await genSalt(SALT_ROUNDS);
     this.passwordHash = await hash(password, pwdSalt);
     return this;
   }
