@@ -25,8 +25,8 @@ export class AuthService {
     }
 
     if (await this.blogUserMemoryRepository.getByEmail(blogUser.email)) {
-      Logger.error('AUTH_USER_EXISTS');
-      return ('AUTH_USER_EXISTS');
+      Logger.error(AUTH_USER_EXISTS);
+      return (AUTH_USER_EXISTS);
     }
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(dto.password);
