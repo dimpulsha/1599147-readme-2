@@ -3,7 +3,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { BlogUserMemoryRepository } from '../blog-user/blog-user-memory.repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
-import { AUTH_USER_EXISTS } from './auth-constant';
+import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, METHOD_NOT_IMPLEMENTED } from './auth-constant';
+import { LoginUserDTO } from './dto/login-user.dto';
+import { UpdatePasswordDTO } from './dto/update-pwd.dto';
 
 @Injectable()
 export class AuthService {
@@ -35,7 +37,38 @@ export class AuthService {
   }
 
 
-  // async verifyUser() {
+  async verifyUser(dto: LoginUserDTO) {
 
-  // }
+    const { email, password } = dto;
+    const existUser = await this.blogUserMemoryRepository.getByEmail(email);
+    if (!existUser) {
+      Logger.error(AUTH_LOGIN_WRONG);
+      return (AUTH_LOGIN_WRONG);
+    }
+
+    const blogUserEntity = new BlogUserEntity(existUser);
+    if (! await blogUserEntity.comparePassword(password)) {
+      Logger.error(AUTH_LOGIN_WRONG);
+      return (AUTH_LOGIN_WRONG);
+    }
+
+    return blogUserEntity.toObject();
+
+  }
+
+  async getUser(id: string) {
+
+    const existUser = await this.blogUserMemoryRepository.getById(id)
+    if (!existUser) {
+      Logger.error(AUTH_NOT_FOUND);
+      return (AUTH_NOT_FOUND);
+    }
+  }
+
+  async updatePWD(dto: UpdatePasswordDTO) {
+
+      Logger.error(METHOD_NOT_IMPLEMENTED);
+      return (`${METHOD_NOT_IMPLEMENTED} ${JSON.stringify(dto)} `);
+  }
+
 }
