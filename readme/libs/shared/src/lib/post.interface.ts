@@ -18,4 +18,5 @@ export interface BlogPostInterface {
   postState: PostState;
   createDate: Date;
   publicationDate: Date;
+  tagList: string[];
 }
