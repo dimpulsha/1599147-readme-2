@@ -17,7 +17,7 @@ export class BlogUserMemoryRepository implements CRUDInterface<BlogUserEntity, s
     return { ...blogUserItem };
   }
 
-  public async getById(id: string): Promise<UserInterface> {
+  public async getById(id: string): Promise<UserInterface | null> {
      Logger.log(`User getById`)
     if (this.repository[id]) {
       return { ...this.repository[id] }
@@ -25,7 +25,7 @@ export class BlogUserMemoryRepository implements CRUDInterface<BlogUserEntity, s
     return null;
   }
 
-  public async getByEmail(email: string): Promise<UserInterface> {
+  public async getByEmail(email: string): Promise<UserInterface | null> {
      Logger.log(`User getEmail`)
     const existUser = Object.values(this.repository).find((item) => item.email === email);
 
