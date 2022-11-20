@@ -12,15 +12,15 @@ export class PostApiController {
   @Post()
   public async create(@Body() dto: CreateVideoDTO | CreateTextDTO | CreateCiteDTO | CreatePhotoDTO | CreateLinkDTO, @Query('postKind') postKind: PostKind) {
     Logger.log('accept request blog/ for create blog post');
-    Logger.log(dto);
-    // return (`${METHOD_NOT_IMPLEMENTED}  accept request blog/ for create blog post`);
     this.postAPIService.create(dto, postKind);
   }
 
   @Get()
-  public async getPostList(@Query() {startCount, endCount, sortKind, sortDirection }) {
+  public async index(@Query() {startCount, endCount, sortKind, sortDirection }) {
     Logger.log('accept request blog/ for post list');
-    return (`${METHOD_NOT_IMPLEMENTED} ${startCount}, ${endCount}, ${sortKind}, ${sortDirection}`);
+    Logger.log(`${startCount}, ${endCount}, ${sortKind}, ${sortDirection}`);
+
+    await this.postAPIService.index();
   }
 
   @Get(':id')

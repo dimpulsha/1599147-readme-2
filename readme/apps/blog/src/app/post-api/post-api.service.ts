@@ -106,4 +106,12 @@ export class PostApiService {
     return await this.postMemoryRepository.create(this.postEntity);
   }
 
+  async index() {
+    const list = await this.postMemoryRepository.getPostList();
+    console.log(list);
+
+    return list;
+  }
+
+
 }
