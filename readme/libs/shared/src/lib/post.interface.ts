@@ -2,13 +2,15 @@ import { PostKind } from "./post-kind.enum";
 import { PostState } from "./post-state.enum";
 
 export interface PostInterface {
-  id: number;
+  id?: number;
   userId: number;
   postKind: PostKind;
   postName?: string;
+  postReview?: string
   postText?: string;
   linkURL?: string;
   photoLink?: string;
+  linkDescription?: string;
   citeAuthor?: string;
   isRepost: boolean;
   originUserId?: number;

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Query } from '@nestjs/common';
-import { CreatePostDTO } from './dto/create-post.dto';
+import { PostKind } from '@readme/shared';
+import { CreateVideoDTO, CreateTextDTO, CreateCiteDTO, CreatePhotoDTO, CreateLinkDTO} from './dto/create.dto';
 import { PostApiService } from './post-api.service';
 const METHOD_NOT_IMPLEMENTED = 'Method not implemented';
 
@@ -9,10 +10,11 @@ export class PostApiController {
   constructor(private readonly postAPIService: PostApiService) { }
 
   @Post()
-  public async create(@Body() dto: CreatePostDTO) {
+  public async create(@Body() dto: CreateVideoDTO | CreateTextDTO | CreateCiteDTO | CreatePhotoDTO | CreateLinkDTO, @Query('postKind') postKind: PostKind) {
     Logger.log('accept request blog/ for create blog post');
     Logger.log(dto);
-    return (`${METHOD_NOT_IMPLEMENTED}  accept request blog/ for create blog post`);
+    // return (`${METHOD_NOT_IMPLEMENTED}  accept request blog/ for create blog post`);
+    this.postAPIService.create(dto, postKind);
   }
 
   @Get()

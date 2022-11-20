@@ -2,6 +2,7 @@ import {CRUDInterface} from '@readme/core'
 import { PostInterface } from '@readme/shared';
 import { PostEntity } from './post-entity';
 import { Injectable, Logger } from '@nestjs/common';
+import { generateRandomValue } from '@readme/shared';
 
 @Injectable()
 export class PostMemoryRepository implements CRUDInterface<PostEntity, number, PostInterface> {
@@ -9,9 +10,10 @@ export class PostMemoryRepository implements CRUDInterface<PostEntity, number, P
   private repository: { [key: string]: PostInterface } = {}
 
   public async create(item: PostEntity): Promise<PostInterface> {
-    Logger.log(`Post created ${item.id}`)
-    const blogPostItem = { ...item.toObject() }
+    Logger.log(`Post created ${item.postName}`)
+    const blogPostItem = { ...item.toObject(), id: generateRandomValue(3000, 5000000) }
     this.repository[item.id] = blogPostItem;
+    console.log({ ...blogPostItem });
     return { ...blogPostItem };
   }
 

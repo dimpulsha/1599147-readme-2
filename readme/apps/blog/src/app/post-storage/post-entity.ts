@@ -7,9 +7,11 @@ export class PostEntity implements PostInterface {
   public userId: number;
   public postKind: PostKind;
   public postName: string;
+  public postReview: string;
   public postText: string;
   public linkURL: string;
   public photoLink: string;
+  public linkDescription: string;
   public citeAuthor: string;
   public isRepost: boolean;
   public originUserId: number;
@@ -31,8 +33,10 @@ export class PostEntity implements PostInterface {
     this.userId = post.userId;
     this.postKind = post.postKind;
     this.postName = post.postName;
+    this.postReview = post.postReview;
     this.postText = post.postText;
     this.linkURL = post.linkURL;
+    this.linkDescription = post.linkDescription;
     this.citeAuthor = post.citeAuthor;
     this.isRepost = post.isRepost;
     this.originUserId = post.originUserId;

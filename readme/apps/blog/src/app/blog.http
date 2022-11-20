@@ -1,14 +1,11 @@
 #Публикация
 ## Создать публикацию
-POST http://localhost:4444/api/blog HTTP/1.1
+POST http://localhost:4444/api/blog?postKind=cite HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "1@fill.com",
-  "firstName": "vova",
-  "lastName": "string",
-  "avatarImg": "test.img",
-  "password": "123456"
+  "postText": "Author",
+  "citeAuthor": "string First"
 }
 ###
 ## Список публикаций
