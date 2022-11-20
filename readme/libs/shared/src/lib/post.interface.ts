@@ -1,7 +1,7 @@
 import { PostKind } from "./post-kind.enum";
 import { PostState } from "./post-state.enum";
 
-export interface BlogPostInterface {
+export interface PostInterface {
   id: number;
   userId: number;
   postKind: PostKind;
@@ -12,6 +12,7 @@ export interface BlogPostInterface {
   citeAuthor?: string;
   isRepost: boolean;
   originUserId?: number;
+  originPostId?: number;
   likeCount: number;
   commentCount: number;
   repostCount: number;

@@ -21,7 +21,6 @@ export class BlogUserEntity implements UserInterface {
   public toObject() {
     Logger.log('BlogUserEntity: toObject');
     Logger.log({ ...this });
-    console.log({...this});
     return { ...this };
   }
 
