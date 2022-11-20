@@ -44,7 +44,8 @@ export class AuthController {
 
   @Post(':id')
   @HttpCode(HttpStatus.OK)
-  public async checkUser() {
+  public async checkUser(@Param('id') id: string) {
+    console.log(id);
     Logger.log('accept Post request auth/:id');
     return (METHOD_NOT_IMPLEMENTED);
 
@@ -52,7 +53,9 @@ export class AuthController {
 
   @Patch('update/:id')
   @HttpCode(HttpStatus.OK)
-  public async update() {
+  public async update(@Param('id') id: string) {
+    console.log(id);
+
     Logger.log('accept update auth/update/:id');
     return (METHOD_NOT_IMPLEMENTED);
 
