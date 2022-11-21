@@ -13,8 +13,6 @@ export class PostMemoryRepository implements CRUDInterface<PostEntity, number, P
     Logger.log(`Post created ${item.postName}`)
     const blogPostItem = { ...item.toObject(), id: generateRandomValue(3000, 5000000) }
     this.repository[blogPostItem.id] = blogPostItem;
-    console.log(this.repository);
-
     return { ...blogPostItem };
   }
 
