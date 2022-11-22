@@ -1,0 +1,17 @@
+#Комментарий
+# Создать коммнетарий
+POST http://localhost:5555/api/comments/0987654321 HTTP/1.1
+Content-Type: application/json
+
+{
+  "commentsText": "4@fill.com",
+  "userId": "123456"
+}
+###
+##
+GET http://localhost:5555/api/comments/0987654321 HTTP/1.1
+Content-Type: application/json
+
+{ }
+###
+
