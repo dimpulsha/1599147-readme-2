@@ -1,10 +1,10 @@
-import { PostKind } from "./post-kind.enum";
+import { ContentType } from "./content-type.enum";
 import { PostState } from "./post-state.enum";
 
 export interface PostInterface {
   id?: number;
   userId: number;
-  postKind: PostKind;
+  contentType: ContentType;
   postName?: string;
   postReview?: string
   postText?: string;
