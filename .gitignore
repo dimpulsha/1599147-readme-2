@@ -11,3 +11,5 @@ coverage
 *.log
 readme-2.code-workspace
 _temp/
+database/
+*.env
