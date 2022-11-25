@@ -16,7 +16,7 @@ export class AuthService {
     private readonly configService: ConfigService
   ) {
 
-    console.log(this.configService.get<string>('database.host'));
+    console.log(this.configService.get<string>('database.port'));
 
   }
 
