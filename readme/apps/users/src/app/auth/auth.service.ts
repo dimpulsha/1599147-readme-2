@@ -1,7 +1,7 @@
 import * as dayjs from 'dayjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
-import { BlogUserMemoryRepository } from '../blog-user/blog-user-memory.repository';
+import { BlogUserDBRepository } from '../blog-user/blog-user-db-repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, METHOD_NOT_IMPLEMENTED } from './auth-constant';
 import { LoginUserDTO } from './dto/login-user.dto';
@@ -12,7 +12,7 @@ import { ConfigService } from '@nestjs/config';
 export class AuthService {
 
   constructor(
-    private readonly blogUserMemoryRepository: BlogUserMemoryRepository,
+    private readonly blogUserRepository: BlogUserDBRepository,
     private readonly configService: ConfigService
   ) {
 
@@ -32,21 +32,21 @@ export class AuthService {
       passwordHash: ''
     }
 
-    if (await this.blogUserMemoryRepository.getByEmail(blogUser.email)) {
+    if (await this.blogUserRepository.getByEmail(blogUser.email)) {
       Logger.error(AUTH_USER_EXISTS);
       return (AUTH_USER_EXISTS);
     }
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(dto.password);
 
-    return await this.blogUserMemoryRepository.create(userEntity);
+    return await this.blogUserRepository.create(userEntity);
   }
 
 
   async verifyUser(dto: LoginUserDTO) {
 
     const { email, password } = dto;
-    const existUser = await this.blogUserMemoryRepository.getByEmail(email);
+    const existUser = await this.blogUserRepository.getByEmail(email);
     if (!existUser) {
       Logger.error(AUTH_LOGIN_WRONG);
       return null;
@@ -64,7 +64,7 @@ export class AuthService {
 
   async getUser(id: string) {
 
-    const existUser = await this.blogUserMemoryRepository.getById(id)
+    const existUser = await this.blogUserRepository.getById(id)
     if (!existUser) {
       Logger.error(AUTH_NOT_FOUND);
       return null;
