@@ -1,4 +1,4 @@
-export enum PostKind {
+export enum ContentType {
   Photo = 'photo',
   Video = 'video',
   Text = 'text',

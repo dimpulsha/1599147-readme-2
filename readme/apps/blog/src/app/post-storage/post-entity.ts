@@ -1,11 +1,11 @@
 import { Logger } from "@nestjs/common";
-import { PostInterface, PostKind } from '@readme/shared';
+import { PostInterface, ContentType } from '@readme/shared';
 import { PostState } from "@readme/shared";
 
 export class PostEntity implements PostInterface {
   public id: number;
   public userId: number;
-  public postKind: PostKind;
+  public contentType: ContentType;
   public postName: string;
   public postReview: string;
   public postText: string;
@@ -31,7 +31,7 @@ export class PostEntity implements PostInterface {
   public fillEntity(post: PostInterface) {
     this.id = post.id;
     this.userId = post.userId;
-    this.postKind = post.postKind;
+    this.contentType = post.contentType;
     this.postName = post.postName;
     this.postReview = post.postReview;
     this.postText = post.postText;

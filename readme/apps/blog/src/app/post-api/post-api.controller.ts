@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Query } from '@nestjs/common';
-import { PostKind } from '@readme/shared';
+import { ContentType } from '@readme/shared';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateVideoDTO, CreateTextDTO, CreateCiteDTO, CreatePhotoDTO, CreateLinkDTO} from './dto/create.dto';
 import { PostApiService } from './post-api.service';
@@ -17,9 +17,9 @@ export class PostApiController {
     status: HttpStatus.CREATED,
     description: 'The new post has been successfully created.'
   })
-  public async create(@Body() dto: CreateVideoDTO | CreateTextDTO | CreateCiteDTO | CreatePhotoDTO | CreateLinkDTO, @Query('postKind') postKind: PostKind) {
+  public async create(@Body() dto: CreateVideoDTO | CreateTextDTO | CreateCiteDTO | CreatePhotoDTO | CreateLinkDTO, @Query('contentType') contentType: ContentType) {
     Logger.log('accept request blog/ for create blog post');
-    this.postAPIService.create(dto, postKind);
+    this.postAPIService.create(dto, contentType);
   }
 
   @Get()

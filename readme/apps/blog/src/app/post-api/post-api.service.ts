@@ -1,7 +1,7 @@
 import { Injectable} from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { PostMemoryRepository } from '../post-storage/post-memory.repository';
-import { PostKind } from '@readme/shared';
+import { ContentType } from '@readme/shared';
 import { CreateVideoDTO, CreateTextDTO, CreateCiteDTO, CreatePhotoDTO, CreateLinkDTO} from './dto/create.dto';
 import { PostEntity } from '../post-storage/post-entity';
 import { PostState } from '@readme/shared';
@@ -17,7 +17,7 @@ export class PostApiService {
 
   private readonly emptyPost = {
     userId: 1234567890,
-    postKind: null,
+    contentType: null,
     postName: null,
     postReview: null,
     postText: null,
@@ -83,21 +83,21 @@ export class PostApiService {
   }
 
 
-  async create(dto, postKind: PostKind) {
-    switch (postKind)  {
-      case PostKind.Video:
+  async create(dto, contentType: ContentType) {
+    switch (contentType)  {
+      case ContentType.Video:
         this.postEntity = this.fillVideo(dto);
         break;
-      case PostKind.Text:
+      case ContentType.Text:
         this.postEntity = this.fillText(dto);
         break;
-      case PostKind.Cite:
+      case ContentType.Cite:
         this.postEntity = this.fillCite(dto);
         break;
-      case PostKind.Photo:
+      case ContentType.Photo:
         this.postEntity = this.fillPhoto(dto);
         break;
-      case PostKind.Link:
+      case ContentType.Link:
         this.postEntity = this.fillLink(dto);
         break;
       default: throw new Error('Unknown PostKind');
