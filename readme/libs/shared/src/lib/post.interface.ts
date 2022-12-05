@@ -3,7 +3,7 @@ import { PostState } from "./post-state.enum";
 
 export interface PostInterface {
   id?: number;
-  userId: number;
+  userId: string;
   contentType: ContentType;
   postName?: string;
   postReview?: string

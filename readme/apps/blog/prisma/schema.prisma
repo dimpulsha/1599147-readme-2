@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,3 +6,62 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Post {
+
+id                  Int @id @default(autoincrement())
+userId              String
+contentType         ContentType @relation(fields: [contentTypeId], references: [id])
+contentTypeId       Int
+postName            String
+postReview          String
+postText            String
+linkURL             String
+photoLink           String
+linkDescription     String
+citeAuthor          String
+isRepost            Boolean
+originUserId        String
+originPostId        Int
+originPost          Post? @relation("OriginRepost", fields: [originPostId], references: [id])
+reposts             Post[] @relation("OriginRepost")
+likeCount           Int
+likeList            Likes[]
+commentCount        Int
+repostCount         Int
+postState           PostState @relation(fields: [postStateId], references: [id])
+postStateId         Int
+createDate          DateTime @default(now())
+publicationDate     DateTime @default(now())
+tags                Tags[]
+}
+
+model ContentType {
+  id                  Int @id @default(autoincrement())
+  name                String
+  posts               Post[]
+}
+
+model PostState {
+  id                  Int @id @default(autoincrement())
+  name                String
+  posts               Post[]
+}
+
+model Tags {
+  id                  Int @id @default(autoincrement())
+  iserId              String
+  name                String
+  posts               Post[]
+
+  @@unique([iserId, name])
+}
+
+
+model Likes {
+   id          Int @id @default(autoincrement())
+   userId      String
+   post        Post @relation(fields: [postId], references: [id])
+   postId      Int
+}
+
