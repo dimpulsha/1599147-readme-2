@@ -14,22 +14,22 @@ id                  Int @id @default(autoincrement())
 userId              String
 contentType         ContentType @relation(fields: [contentTypeId], references: [id])
 contentTypeId       Int
-postName            String
-postReview          String
-postText            String
-linkURL             String
-photoLink           String
-linkDescription     String
-citeAuthor          String
+postName            String?
+postReview          String?
+postText            String?
+linkURL             String?
+photoLink           String?
+linkDescription     String?
+citeAuthor          String?
 isRepost            Boolean
-originUserId        String
-originPostId        Int
+originUserId        String?
+originPostId        Int?
 originPost          Post? @relation("OriginRepost", fields: [originPostId], references: [id])
 reposts             Post[] @relation("OriginRepost")
-likeCount           Int
+likeCount           Int @default(0)
 likeList            Likes[]
-commentCount        Int
-repostCount         Int
+commentCount        Int @default(0)
+repostCount         Int @default(0)
 postState           PostState @relation(fields: [postStateId], references: [id])
 postStateId         Int
 createDate          DateTime @default(now())
