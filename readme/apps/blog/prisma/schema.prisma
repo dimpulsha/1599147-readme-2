@@ -58,7 +58,6 @@ model Tags {
   @@unique([iserId, name])
 }
 
-
 model Likes {
    id          Int @id @default(autoincrement())
    userId      String

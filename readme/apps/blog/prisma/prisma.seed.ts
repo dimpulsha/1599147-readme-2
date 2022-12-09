@@ -16,17 +16,7 @@ async function fillDb() {
       postName: 'the first post',
       postReview: 'the post about life',
       postText: 'I am start study next.js',
-      linkURL: '',
-      photoLink:'',
-      linkDescription: '',
-      citeAuthor:'',
       isRepost: false,
-      originUserId: '',
-      // originPost: null,
-      likeCount: 0,
-      // likeList: null,
-      commentCount: 0,
-      repostCount: 0,
       postState: {
         create: {
           name: 'draft'
@@ -35,11 +25,11 @@ async function fillDb() {
       tags: {
         create: [
           {
-            iserId: '1',
+            iserId: '42',
             name: '#dayLog',
           },
           {
-            iserId: '1',
+            iserId: '42',
             name: '#JavaScript',
           }
         ]
