@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+id                  Int @id @default(autoincrement())
+userId              String
+contentType         ContentType @relation(fields: [contentTypeId], references: [id])
+contentTypeId       Int
+content             Content?
+isRepost            Boolean @default(false)
+originUserId        String?
+originPostId        Int?
+originPost          Post? @relation("OriginRepost", fields: [originPostId], references: [id])
+reposts             Post[] @relation("OriginRepost")
+likeCount           Int @default(0)
+likeList            Likes[]
+commentCount        Int @default(0)
+repostCount         Int @default(0)
+postState           PostState @relation(fields: [postStateId], references: [id])
+postStateId         Int
+createDate          DateTime @default(now())
+publicationDate     DateTime @default(now())
+tags                Tags[]
+comments            Comment[]
+}
+
+model ContentType {
+  id                  Int @id @default(autoincrement())
+  name                String
+  posts               Post[]
+
+  @@unique([name])
+}
+
+model PostState {
+  id                  Int @id @default(autoincrement())
+  name                String
+  posts               Post[]
+
+  @@unique([name])
+}
+
+model Tags {
+  name                String @id
+  posts               Post[]
+
+}
+
+model Likes {
+  id          Int @id @default(autoincrement())
+  userId      String
+  post        Post @relation(fields: [postId], references: [id])
+  postId      Int
+
+}
+
+model Content {
+id                  Int @id @default(autoincrement())
+post                Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+postId              Int @unique
+postName            String?
+postReview          String?
+postText            String?
+linkURL             String?
+photoLink           String?
+linkDescription     String?
+citeAuthor          String?
+}
+
+model Comment {
+  id          Int @id @default(autoincrement())
+  userId      String
+  post        Post @relation(fields: [postId], references: [id])
+  postId      Int
+  text        String
+  createDate          DateTime @default(now())
+}

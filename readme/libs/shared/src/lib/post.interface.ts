@@ -1,25 +1,20 @@
-import { ContentType } from "./content-type.enum";
-import { PostState } from "./post-state.enum";
+import { ContentInterface } from "./content.interface";
+
 
 export interface PostInterface {
   id?: number;
-  userId: number;
-  contentType: ContentType;
-  postName?: string;
-  postReview?: string
-  postText?: string;
-  linkURL?: string;
-  photoLink?: string;
-  linkDescription?: string;
-  citeAuthor?: string;
-  isRepost: boolean;
-  originUserId?: number;
+  userId: string;
+  contentType?: string;
+  content?: ContentInterface;
+  isRepost?: boolean;
+  originUserId?: string;
   originPostId?: number;
-  likeCount: number;
-  commentCount: number;
-  repostCount: number;
-  postState: PostState;
-  createDate: Date;
-  publicationDate: Date;
-  tagList: string[];
+  likeCount?: number;
+  isLike?: boolean;
+  commentCount?: number;
+  repostCount?: number;
+  postState?: string;
+  createDate?: Date;
+  publicationDate?: Date;
+  tagList?: string[];
 }

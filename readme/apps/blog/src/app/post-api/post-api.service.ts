@@ -1,117 +1,63 @@
 import { Injectable} from '@nestjs/common';
-import * as dayjs from 'dayjs';
-import { PostMemoryRepository } from '../post-storage/post-memory.repository';
-import { ContentType } from '@readme/shared';
-import { CreateVideoDTO, CreateTextDTO, CreateCiteDTO, CreatePhotoDTO, CreateLinkDTO} from './dto/create.dto';
+import { CreatePostDTO } from './dto/create-post.dto';
 import { PostEntity } from '../post-storage/post-entity';
-import { PostState } from '@readme/shared';
+import { PostInterface, PostStateEnum } from '@readme/shared';
+import { PostRepository } from '../post-storage/post.repository';
+import { UpdatePostDTO } from './dto/update-post.dto';
 
 @Injectable()
 export class PostApiService {
 
   constructor(
-    private readonly postMemoryRepository: PostMemoryRepository
+    private readonly postRepository: PostRepository
   ) { }
 
   private postEntity: PostEntity;
 
-  private readonly emptyPost = {
-    userId: 1234567890,
-    contentType: null,
-    postName: null,
-    postReview: null,
-    postText: null,
-    linkURL: null,
-    photoLink: null,
-    linkDescription: null,
-    citeAuthor: null,
-    isRepost: false,
-    originUserId: 0,
-    originPostId: 0,
-    likeCount: 0,
-    commentCount: 0,
-    repostCount: 0,
-    postState: PostState.Published,
-    createDate: dayjs().toDate(),
-    publicationDate: dayjs().toDate(),
-    tagList: []
+  private getSplitTags(tags: string): string[] {
+    const tagList = tags ? tags.split(' ') : []
+    return tagList
   }
 
-  private fillVideo(dto: CreateVideoDTO): PostEntity {
-    const newPost = this.emptyPost;
-    newPost.postName = dto.postName;
-    newPost.linkURL = dto.linkURL;
-    // todo
-    // newPost.tagList = dto.tagList;
-    return new PostEntity(newPost);
+  public async create(dto: CreatePostDTO): Promise<PostInterface> {
+    const userId = 'bla-1234567890-bla';
+    const postState = dto.postState ? dto.postState : PostStateEnum.Draft;
+    this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getSplitTags(dto.tagList) });
+    const result = await this.postRepository.create(this.postEntity);
+    return result;
   }
 
-  private fillText(dto: CreateTextDTO): PostEntity {
-    const newPost = this.emptyPost;
-    newPost.postName = dto.postName;
-    newPost.postReview = dto.postReview;
-     newPost.postText = dto.postText;
-    //  todo
-    // newPost.tagList = dto.tagList;
-    return new PostEntity(newPost);
+  public async index() {
+    const result = await this.postRepository.getItemList();
+    return result;
   }
 
-  private fillCite(dto: CreateCiteDTO): PostEntity {
-    const newPost = this.emptyPost;
-    newPost.citeAuthor = dto.citeAuthor;
-    newPost.postText = dto.postText;
-    //  todo
-    // newPost.tagList = dto.tagList;
-    return new PostEntity(newPost);
+  public async getItem(id: number): Promise<PostInterface> {
+    const result = await this.postRepository.getById(id);
+    return result;
   }
 
-  private fillPhoto(dto: CreatePhotoDTO): PostEntity {
-    const newPost = this.emptyPost;
-    newPost.photoLink = dto.photoLink;
-    //  todo
-    // newPost.tagList = dto.tagList;
-    return new PostEntity(newPost);
+  public async updateItem(id: number, dto: UpdatePostDTO): Promise<PostInterface> {
+    const postState = dto.postState ? dto.postState : PostStateEnum.Draft;
+    const userId = 'bla-1234567890-bla';
+    this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getSplitTags(dto.tagList) });
+
+    const result = await this.postRepository.update(id, this.postEntity);
+    return result;
   }
 
-  private fillLink(dto: CreateLinkDTO): PostEntity {
-    const newPost = this.emptyPost;
-    newPost.linkURL = dto.linkURL;
-    newPost.linkDescription = dto.linkDescription;
-    //  todo
-    // newPost.tagList = dto.tagList;
-    return new PostEntity(newPost);
+  public async deleteItem(id: number): Promise<void>  {
+   await this.postRepository.delete(id);
+
   }
 
-
-  async create(dto, contentType: ContentType) {
-    switch (contentType)  {
-      case ContentType.Video:
-        this.postEntity = this.fillVideo(dto);
-        break;
-      case ContentType.Text:
-        this.postEntity = this.fillText(dto);
-        break;
-      case ContentType.Cite:
-        this.postEntity = this.fillCite(dto);
-        break;
-      case ContentType.Photo:
-        this.postEntity = this.fillPhoto(dto);
-        break;
-      case ContentType.Link:
-        this.postEntity = this.fillLink(dto);
-        break;
-      default: throw new Error('Unknown PostKind');
-    }
-
-    return await this.postMemoryRepository.create(this.postEntity);
+  public async repost(id: number, userId: string): Promise<PostInterface | number> {
+    const result = await this.postRepository.repost(id, userId);
+    return result;
   }
 
-  async index() {
-    const list = await this.postMemoryRepository.getPostList();
-    console.log(list);
-
-    return list;
+    public async switchLike(id: number, userId: string): Promise<boolean> {
+    const result = await this.postRepository.like(id, userId);
+    return result;
   }
-
-
 }

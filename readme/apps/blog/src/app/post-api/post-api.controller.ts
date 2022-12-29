@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Query } from '@nestjs/common';
-import { ContentType } from '@readme/shared';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateVideoDTO, CreateTextDTO, CreateCiteDTO, CreatePhotoDTO, CreateLinkDTO} from './dto/create.dto';
+import { fillObject } from '@readme/core';
+import { CreatePostDTO } from './dto/create-post.dto';
+import { UpdatePostDTO } from './dto/update-post.dto';
 import { PostApiService } from './post-api.service';
-const METHOD_NOT_IMPLEMENTED = 'Method not implemented';
+import { PostInfoRDO } from './rdo/post-info.rdo';
+import { PostListRDO } from './rdo/post-list.rdo';
 
 @ApiTags('blog')
 @Controller('blog')
@@ -17,21 +19,24 @@ export class PostApiController {
     status: HttpStatus.CREATED,
     description: 'The new post has been successfully created.'
   })
-  public async create(@Body() dto: CreateVideoDTO | CreateTextDTO | CreateCiteDTO | CreatePhotoDTO | CreateLinkDTO, @Query('contentType') contentType: ContentType) {
+  public async create(@Body() dto: CreatePostDTO) {
     Logger.log('accept request blog/ for create blog post');
-    this.postAPIService.create(dto, contentType);
+    const result = await this.postAPIService.create(dto);
+
+    return fillObject(PostInfoRDO, result)
+
   }
 
   @Get()
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'The comment list has been presented.'
+    description: 'Posts list presented.'
   })
-  public async index(@Query() {startCount, endCount, sortKind, sortDirection }) {
+  public async index() {
     Logger.log('accept request blog/ for post list');
-    Logger.log(`${startCount}, ${endCount}, ${sortKind}, ${sortDirection}`);
 
-    await this.postAPIService.index();
+    const result = await this.postAPIService.index();
+    return fillObject(PostListRDO, result)
   }
 
   @Get(':id')
@@ -40,9 +45,12 @@ export class PostApiController {
     description: 'The post information has been presented.'
   })
   public async getPost(@Param('id') id: string) {
-    Logger.log('accept request blog/:id for read');
-    Logger.log(id);
-    return (`${METHOD_NOT_IMPLEMENTED} ${id}`);
+    Logger.log(`post.controller: accept request blog/${id} for read`);
+    const postId = parseInt(id, 10);
+    const result = await this.postAPIService.getItem(postId);
+    // todo - если null, то 404
+    return fillObject(PostInfoRDO, result)
+
   }
 
   @Patch(':id')
@@ -50,10 +58,12 @@ export class PostApiController {
     status: HttpStatus.OK,
     description: 'The post has been updated.'
   })
-  public async updatePost(@Param('id') id: string) {
-    Logger.log('accept request blog/:id for update');
-    Logger.log(id);
-    return (`${METHOD_NOT_IMPLEMENTED} ${id}`);
+  public async updatePost(@Param('id') id: string, @Body() dto: UpdatePostDTO) {
+    Logger.log(`accept request blog/${id} for update`);
+    const postId = parseInt(id, 10);
+    const result = await this.postAPIService.updateItem(postId, dto);
+    return fillObject(PostInfoRDO, result)
+
   }
 
   @Delete(':id')
@@ -62,21 +72,25 @@ export class PostApiController {
     description: 'The post has been deleted.'
   })
   public async deletePost(@Param('id') id: string) {
-    Logger.log('accept request blog/:id for delete');
-    Logger.log(id);
-    return (`${METHOD_NOT_IMPLEMENTED} ${id}`);
+    Logger.log(`accept request blog/${id} for delete`);
+    const postId = parseInt(id, 10);
+
+    await this.postAPIService.deleteItem(postId);
   }
 
   @Post('like/:id')
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Like information updated.'
+    description: 'Like is switched.'
   })
-  @HttpCode(HttpStatus.OK)
-  public async likePost(@Param('id') id: string) {
-    Logger.log('accept request blog/:id for change like');
-    Logger.log(id);
-    return (`${METHOD_NOT_IMPLEMENTED}  ${id}`);
+  public async switchLike(@Param('id') id: string) {
+    const postId = parseInt(id, 10);
+    Logger.log('accept request blog/:id for repost');
+    const userId = 'bla-1234567890-bla-4';
+
+    const result = await this.postAPIService.switchLike(postId, userId)
+
+    return result;
   }
 
   @Post('repost/:id')
@@ -85,8 +99,17 @@ export class PostApiController {
     description: 'The repost has been created.'
   })
   public async repost(@Param('id') id: string) {
+    const postId = parseInt(id, 10);
     Logger.log('accept request blog/:id for repost');
-    Logger.log(id);
-    return (`${METHOD_NOT_IMPLEMENTED}  ${id}`);
+    const userId = 'bla-1234567890-bla-2';
+
+    const result = await this.postAPIService.repost(postId, userId)
+
+    if (result instanceof Number) {
+      return result;
+    }
+
+    return fillObject(PostInfoRDO, result);
+
   }
 }

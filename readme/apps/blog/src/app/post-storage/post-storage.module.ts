@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PostMemoryRepository } from './post-memory.repository';
+import { PostRepository } from './post.repository';
+
 
 @Module({
   imports: [],
-  providers: [PostMemoryRepository],
-  exports: [PostMemoryRepository]
+  providers: [PostRepository],
+  exports: [PostRepository]
 })
 
 export class PostStorageModule {}

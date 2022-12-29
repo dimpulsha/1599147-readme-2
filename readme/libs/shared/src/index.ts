@@ -4,3 +4,8 @@ export * from './lib/content-type.enum';
 export * from './lib/post-state.enum';
 export * from './lib/post.interface';
 export * from './lib/random';
+export * from './lib/entity.interface';
+export * from './lib/content-type.interface';
+export * from './lib/like.interface';
+export * from './lib/tag.interface';
+export * from './lib/content.interface';

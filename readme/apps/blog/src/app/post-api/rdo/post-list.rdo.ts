@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
-import { ContentType } from '@readme/shared';
+import { ContentInterface, ContentTypeInterface } from '@readme/shared';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PostInfoRDO {
+export class PostListRDO {
 
   @ApiProperty({
      description: 'The uniq publication ID',
@@ -23,63 +23,14 @@ export class PostInfoRDO {
      example: 'video'
    })
   @Expose()
-  public contentType: ContentType;
+  public contentType: ContentTypeInterface;
 
   @ApiProperty({
-     description: 'Name of publication',
-     example: 'The best story'
+    description: 'Post Content',
+    example: ''
    })
   @Expose()
-  public postName?: string;
-
-  @ApiProperty({
-     description: 'Review of content',
-     example: 'The story about my cat'
-   })
-  @Expose()
-  public postReview?: string;
-
-  @ApiProperty({
-     description: 'Publication content',
-     example: 'Lorem ipsum'
-   })
-  @Expose()
-  public postText?: string;
-
-  @ApiProperty({
-     description: 'Link to video or web-page',
-     example: 'https://test.test/1234/5433'
-   })
-  @Expose()
-  public linkURL?: string;
-
-  @ApiProperty({
-     description: 'Link to picture',
-     example: 'https://test.test/1234/5433'
-   })
-  @Expose()
-  public photoLink?: string;
-
-  @ApiProperty({
-     description: 'Description of link',
-     example: 'The link to page'
-   })
-  @Expose()
-  public linkDescription?: string;
-
-  @ApiProperty({
-     description: 'Author of cite',
-     example: 'My dad'
-   })
-  @Expose()
-  public citeAuthor?: string;
-
-  @ApiProperty({
-     description: 'Repost indicator',
-     example: 'false'
-   })
-  @Expose()
-  public isRepost: boolean;
+  public content: ContentInterface;
 
   @ApiProperty({
      description: 'Number of likes',
@@ -102,10 +53,4 @@ export class PostInfoRDO {
   @Expose()
   public publicationDate: Date;
 
-  @ApiProperty({
-     description: 'Array of publication tags',
-     example: ['#dogs', '#cats', '#chicken']
-   })
-  @Expose()
-  public tagList: string[];
 }
