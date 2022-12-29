@@ -10,7 +10,7 @@ export class PostMemoryRepository implements CRUDInterface<PostEntity, number, P
   private repository: { [key: string]: PostInterface } = {}
 
   public async create(item: PostEntity): Promise<PostInterface> {
-    Logger.log(`Post created ${item.postName}`)
+    Logger.log(`Post created`)
     const blogPostItem = { ...item.toObject(), id: generateRandomValue(3000, 5000000) }
     this.repository[blogPostItem.id] = blogPostItem;
     return { ...blogPostItem };

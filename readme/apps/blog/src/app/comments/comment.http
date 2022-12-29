@@ -1,0 +1,26 @@
+## Создать тип контента
+POST http://localhost:4444/api/comment/1 HTTP/1.1
+Content-Type: application/json
+
+{
+"text": "comment -1 "
+}
+###
+## Список публикаций
+GET http://localhost:4444/api/comment HTTP/1.1
+Content-Type: application/json
+
+###
+## информация о публикации
+GET http://localhost:4444/api/comment/1 HTTP/1.1
+Content-Type: application/json
+
+###
+## Обновить публикацию
+PATCH http://localhost:4444/api/comment/1 HTTP/1.1
+Content-Type: application/json
+
+{
+"text": "text-3"
+}
+###

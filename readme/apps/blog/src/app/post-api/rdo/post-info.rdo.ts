@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
-import { ContentType } from '@readme/shared';
-import { PostState } from '@readme/shared';
+import { ContentInterface, ContentTypeInterface } from '@readme/shared';
+import { PostStateEnum } from '@readme/shared';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PostInfoRDO {
@@ -17,63 +17,21 @@ export class PostInfoRDO {
      example: '1ca630bedee5485068bgc80ca5a57edc'
    })
   @Expose()
-  public userId: number;
+  public userId: string;
 
   @ApiProperty({
      description: 'Type of content',
      example: 'video'
    })
   @Expose()
-  public contentType: ContentType;
+  public contentType: ContentTypeInterface;
 
-  @ApiProperty({
-     description: 'Name of publication',
-     example: 'The best story'
+   @ApiProperty({
+     description: 'Post Content',
+     example: ''
    })
   @Expose()
-  public postName?: string;
-
-  @ApiProperty({
-     description: 'Review of content',
-     example: 'The story about my cat'
-   })
-  @Expose()
-  public postReview?: string;
-
-  @ApiProperty({
-     description: 'Publication content',
-     example: 'Lorem ipsum'
-   })
-  @Expose()
-  public postText?: string;
-
-  @ApiProperty({
-     description: 'Link to video or web-page',
-     example: 'https://test.test/1234/5433'
-   })
-  @Expose()
-  public linkURL?: string;
-
-  @ApiProperty({
-     description: 'Link to picture',
-     example: 'https://test.test/1234/5433'
-   })
-  @Expose()
-  public photoLink?: string;
-
-  @ApiProperty({
-     description: 'Description of link',
-     example: 'The link to page'
-   })
-  @Expose()
-  public linkDescription?: string;
-
-  @ApiProperty({
-     description: 'Author of cite',
-     example: 'My dad'
-   })
-  @Expose()
-  public citeAuthor?: string;
+  public content: ContentInterface;
 
   @ApiProperty({
      description: 'Repost indicator',
@@ -87,7 +45,7 @@ export class PostInfoRDO {
      example: '1ca630bedee5485068bgc80ca5a57edc'
    })
   @Expose()
-  public originUserId?: number;
+  public originUserId?: string;
 
   @ApiProperty({
      description: 'Reposted publication origin Id',
@@ -122,7 +80,7 @@ export class PostInfoRDO {
      example: 'draft'
    })
   @Expose()
-  public postState: PostState;
+  public postState: PostStateEnum;
 
   @ApiProperty({
      description: 'Create date',

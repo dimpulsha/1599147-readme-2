@@ -13,9 +13,13 @@ async function fillDb() {
           name: 'text'
         }
       },
-      postName: 'the first post',
-      postReview: 'the post about life',
-      postText: 'I am start study next.js',
+      content: {
+        create: {
+          postName: 'the first post',
+          postReview: 'the post about life',
+          postText: 'I am start study next.js'
+        }
+        },
       isRepost: false,
       postState: {
         create: {
