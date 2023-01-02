@@ -3,13 +3,13 @@ import { PostEntity } from './post-entity';
 import { PostInterface, TagInterface } from '@readme/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
-
+import { PostQuery } from '../post-api/query/post-query';
 @Injectable()
 export class PostRepository implements CRUDInterface<PostEntity, number, PostInterface> {
   constructor(private readonly prisma: PrismaService) { }
 
-  private tagsListObjects(list: string[]): { where: {name: string}, create: {name: string} }[] {
-    return list.map((item) => ({ where: {name: item}, create: {name: item}} ))
+  private tagsListObjects(list: TagInterface[]): { where: {name: string}, create: {name: string} }[] {
+    return list.map((item) => ({ where: {name: item.name}, create: {name: item.name}} ))
   }
 
   private tagsObjectToList(tagsObjects: TagInterface[]): string[] {
@@ -62,9 +62,35 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
 
   }
 
-  public async getItemList(): Promise<PostInterface[] > {
+
+
+  public async getItemList({ limit, sortDirection, page, tag, contentType, sortKind, userId, postState }: PostQuery): Promise<PostInterface[]> {
+
     const result = await this.prisma.post.findMany({
-       include: {
+      where: {
+        contentType: {
+          name: contentType
+        },
+        postState: {
+          name: postState
+        },
+        userId,
+        tags: {
+          some: {
+            name: {
+              in: tag
+            }
+          },
+        },
+      },
+      take: limit,
+      orderBy: [
+         {
+           [sortKind]: sortDirection
+         }
+       ],
+      skip: page > 0 ? limit * (page - 1) : undefined,
+      include: {
         contentType: true,
         content: true,
         tags: true,
@@ -196,7 +222,7 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
     );
 
     const { postName, postReview, postText, linkURL, photoLink, linkDescription, citeAuthor } = originPost.content;
-    const currentTagList = originPost.tags.map(({ name }) => name );
+    const currentTagList = originPost.tags;
 
     const result = await this.prisma.post.create({
       data: {

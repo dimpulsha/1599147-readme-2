@@ -17,12 +17,7 @@ export class BlogUserModel extends Document implements UserInterface {
   @Prop({
     required: true,
   })
-  public firstName: string;
-
-  @Prop({
-    required: true,
-  })
-  public lastName: string;
+  public userName: string;
 
   @Prop()
   public avatarImg: string;

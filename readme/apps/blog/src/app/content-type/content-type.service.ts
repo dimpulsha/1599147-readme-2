@@ -11,9 +11,10 @@ export class PostContentTypeService {
     private readonly contentTypeRepository: PostContentTypeRepository
   ) {}
 
-  async createContentType(dto: CreateContentTypeDTO): Promise<ContentTypeInterface> {
-    const categoryEntity = new PostContentTypeEntity(dto);
-    return this.contentTypeRepository.create(categoryEntity);
+  public async createContentType(dto: CreateContentTypeDTO): Promise<ContentTypeInterface> {
+    const contentTypeEntity = new PostContentTypeEntity(dto);
+
+    return this.contentTypeRepository.create(contentTypeEntity);
   }
 
   async deleteContentType(id: number): Promise<void> {

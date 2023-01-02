@@ -3,7 +3,7 @@ POST http://localhost:4444/api/content-type HTTP/1.1
 Content-Type: application/json
 
 {
-"name": "text"
+"name": "video"
 }
 ###
 ## Список публикаций
@@ -16,6 +16,6 @@ PATCH http://localhost:4444/api/content-type/1 HTTP/1.1
 Content-Type: application/json
 
 {
-"name": "text-3"
+"name": "text"
 }
 ###

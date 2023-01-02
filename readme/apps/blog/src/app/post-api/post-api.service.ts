@@ -1,9 +1,11 @@
 import { Injectable} from '@nestjs/common';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { PostEntity } from '../post-storage/post-entity';
-import { PostInterface, PostStateEnum } from '@readme/shared';
+import { PostInterface, PostStateEnum, TagInterface } from '@readme/shared';
 import { PostRepository } from '../post-storage/post.repository';
 import { UpdatePostDTO } from './dto/update-post.dto';
+import { PostQuery } from './query/post-query';
+// import { TagDTO } from './dto/post-content.dto/tag.dto';
 
 @Injectable()
 export class PostApiService {
@@ -14,21 +16,28 @@ export class PostApiService {
 
   private postEntity: PostEntity;
 
-  private getSplitTags(tags: string): string[] {
-    const tagList = tags ? tags.split(' ') : []
-    return tagList
+  private getTags(tags: string[]): TagInterface[] {
+
+    const tagList = tags.map((item) => ({ name: item }))
+    console.log(tagList);
+
+    return tagList;
   }
 
   public async create(dto: CreatePostDTO): Promise<PostInterface> {
-    const userId = 'bla-1234567890-bla';
+    const userId = 'bla-1234567890-bla-6';
     const postState = dto.postState ? dto.postState : PostStateEnum.Draft;
-    this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getSplitTags(dto.tagList) });
+    this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getTags(dto.tagList) });
+    console.log(dto);
+    console.log(this.getTags(dto.tagList));
+    console.log(this.postEntity);
+
     const result = await this.postRepository.create(this.postEntity);
     return result;
   }
 
-  public async index() {
-    const result = await this.postRepository.getItemList();
+  public async index(query: PostQuery) {
+    const result = await this.postRepository.getItemList(query);
     return result;
   }
 
@@ -40,7 +49,7 @@ export class PostApiService {
   public async updateItem(id: number, dto: UpdatePostDTO): Promise<PostInterface> {
     const postState = dto.postState ? dto.postState : PostStateEnum.Draft;
     const userId = 'bla-1234567890-bla';
-    this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getSplitTags(dto.tagList) });
+    this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getTags(dto.tagList) });
 
     const result = await this.postRepository.update(id, this.postEntity);
     return result;
@@ -60,4 +69,8 @@ export class PostApiService {
     const result = await this.postRepository.like(id, userId);
     return result;
   }
+
+  //todo - мои публикации
+  //todo - моя лента
+
 }

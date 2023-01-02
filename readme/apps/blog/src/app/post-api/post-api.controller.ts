@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillObject } from '@readme/core';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { PostApiService } from './post-api.service';
+import { PostQuery } from './query/post-query';
 import { PostInfoRDO } from './rdo/post-info.rdo';
 import { PostListRDO } from './rdo/post-list.rdo';
 
@@ -32,10 +33,10 @@ export class PostApiController {
     status: HttpStatus.OK,
     description: 'Posts list presented.'
   })
-  public async index() {
+  public async index(@Query() query: PostQuery) {
     Logger.log('accept request blog/ for post list');
 
-    const result = await this.postAPIService.index();
+    const result = await this.postAPIService.index(query);
     return fillObject(PostListRDO, result)
   }
 
@@ -44,10 +45,9 @@ export class PostApiController {
     status: HttpStatus.OK,
     description: 'The post information has been presented.'
   })
-  public async getPost(@Param('id') id: string) {
+  public async getPost(@Param('id') id: number) {
     Logger.log(`post.controller: accept request blog/${id} for read`);
-    const postId = parseInt(id, 10);
-    const result = await this.postAPIService.getItem(postId);
+    const result = await this.postAPIService.getItem(id);
     // todo - если null, то 404
     return fillObject(PostInfoRDO, result)
 
@@ -58,10 +58,9 @@ export class PostApiController {
     status: HttpStatus.OK,
     description: 'The post has been updated.'
   })
-  public async updatePost(@Param('id') id: string, @Body() dto: UpdatePostDTO) {
+  public async updatePost(@Param('id') id: number, @Body() dto: UpdatePostDTO) {
     Logger.log(`accept request blog/${id} for update`);
-    const postId = parseInt(id, 10);
-    const result = await this.postAPIService.updateItem(postId, dto);
+    const result = await this.postAPIService.updateItem(id, dto);
     return fillObject(PostInfoRDO, result)
 
   }
@@ -71,11 +70,9 @@ export class PostApiController {
     status: HttpStatus.OK,
     description: 'The post has been deleted.'
   })
-  public async deletePost(@Param('id') id: string) {
+  public async deletePost(@Param('id') id: number) {
     Logger.log(`accept request blog/${id} for delete`);
-    const postId = parseInt(id, 10);
-
-    await this.postAPIService.deleteItem(postId);
+    await this.postAPIService.deleteItem(id);
   }
 
   @Post('like/:id')
@@ -83,12 +80,11 @@ export class PostApiController {
     status: HttpStatus.OK,
     description: 'Like is switched.'
   })
-  public async switchLike(@Param('id') id: string) {
-    const postId = parseInt(id, 10);
+  public async switchLike(@Param('id') id: number) {
     Logger.log('accept request blog/:id for repost');
     const userId = 'bla-1234567890-bla-4';
 
-    const result = await this.postAPIService.switchLike(postId, userId)
+    const result = await this.postAPIService.switchLike(id, userId)
 
     return result;
   }
@@ -98,12 +94,11 @@ export class PostApiController {
     status: HttpStatus.CREATED,
     description: 'The repost has been created.'
   })
-  public async repost(@Param('id') id: string) {
-    const postId = parseInt(id, 10);
+  public async repost(@Param('id') id: number) {
     Logger.log('accept request blog/:id for repost');
     const userId = 'bla-1234567890-bla-2';
 
-    const result = await this.postAPIService.repost(postId, userId)
+    const result = await this.postAPIService.repost(id, userId)
 
     if (result instanceof Number) {
       return result;
