@@ -6,8 +6,7 @@ import { SALT_ROUNDS } from './blog-user.constant';
 export class BlogUserEntity implements UserInterface {
   public _id: string;
   public email: string;
-  public firstName: string;
-  public lastName: string;
+  public userName: string;
   public avatarImg: string;
   public publicationCount: number;
   public friends: number;
@@ -38,9 +37,8 @@ export class BlogUserEntity implements UserInterface {
     this._id = blogUser._id;
     this.avatarImg = blogUser.avatarImg;
     this.email = blogUser.email;
-    this.firstName = blogUser.firstName;
+    this.userName = blogUser.userName;
     this.friends = blogUser.friends;
-    this.lastName = blogUser.lastName;
     this.passwordHash = blogUser.passwordHash;
     this.publicationCount = blogUser.publicationCount;
     this.registrationDate = blogUser.registrationDate;

@@ -25,15 +25,13 @@ export class PostContentTypeController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async destroy(@Param('id') id: string) {
-    const contentTypeId = parseInt(id, 10);
-    this.contentTypeService.deleteContentType(contentTypeId);
+  async destroy(@Param('id') id: number) {
+    this.contentTypeService.deleteContentType(id);
   }
 
   @Patch('/:id')
-  async update(@Param('id') id: string, @Body() dto: UpdateContentTypeDTO) {
-    const contentTypeId = parseInt(id, 10);
-    const updatedContentType = await this.contentTypeService.updateContentType(contentTypeId, dto)
+  async update(@Param('id') id: number, @Body() dto: UpdateContentTypeDTO) {
+    const updatedContentType = await this.contentTypeService.updateContentType(id, dto)
     return fillObject(ContentTypeRDO, updatedContentType);
   }
 }

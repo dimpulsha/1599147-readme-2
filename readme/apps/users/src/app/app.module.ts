@@ -7,13 +7,14 @@ import databaseConfig from '../config/database.config';
 import { validateDBEnvironments } from './env-db-config.validation';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getMongoDbConfig } from '../config/mongo.config';
+import { jwtOptions } from '../config/jwt.config';
 
 @Module({
   imports: [ConfigModule.forRoot({
     cache: true,
     isGlobal: true,
     envFilePath: ENV_FILE_PATH,
-    load: [databaseConfig],
+    load: [databaseConfig, jwtOptions],
     validate: validateDBEnvironments,
   }),
     MongooseModule.forRootAsync(

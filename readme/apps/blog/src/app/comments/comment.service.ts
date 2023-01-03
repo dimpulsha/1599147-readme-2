@@ -4,6 +4,7 @@ import { CommentEntity } from './comment.entity';
 import { CommentRepository } from './comments.repository';
 import { CreateCommentDTO } from './dto/create-comment.dto';
 import { UpdateCommentDTO } from './dto/update-comment.dto';
+import { CommentsQuery } from './query/comments-query';
 
 @Injectable()
 export class CommentService {
@@ -21,8 +22,8 @@ export class CommentService {
     return result;
   }
 
-    public async index() {
-    const result = await this.commentRepository.getItemList();
+    public async index(query: CommentsQuery) {
+    const result = await this.commentRepository.getItemList(query);
     return result;
   }
 

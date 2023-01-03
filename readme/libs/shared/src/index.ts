@@ -9,3 +9,4 @@ export * from './lib/content-type.interface';
 export * from './lib/like.interface';
 export * from './lib/tag.interface';
 export * from './lib/content.interface';
+export * from './lib/sort-direction.enum';

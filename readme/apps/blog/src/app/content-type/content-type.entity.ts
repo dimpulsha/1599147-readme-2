@@ -1,4 +1,4 @@
-import { ContentTypeInterface } from '@readme/shared';
+import {  ContentTypeInterface } from '@readme/shared';
 import { Entity } from '@readme/shared';
 
 export class PostContentTypeEntity implements Entity<PostContentTypeEntity>, ContentTypeInterface {

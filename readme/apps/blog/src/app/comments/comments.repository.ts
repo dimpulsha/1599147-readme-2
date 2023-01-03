@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { CommentEntity } from './comment.entity';
 import { CommentInterface } from '@readme/shared';
+import { CommentsQuery } from './query/comments-query';
 
 @Injectable()
 export class CommentRepository implements CRUDInterface<CommentEntity, number, CommentInterface> {
@@ -28,8 +29,17 @@ export class CommentRepository implements CRUDInterface<CommentEntity, number, C
     return result;
   }
 
-  public async getItemList(): Promise<CommentInterface[] > {
-    const result = await this.prisma.comment.findMany(
+  public async getItemList({limit, page, sortDirection}: CommentsQuery): Promise<CommentInterface[]> {
+
+    const result = await this.prisma.comment.findMany({
+            take: limit,
+      orderBy: [
+         {
+           id: sortDirection
+         }
+       ],
+      skip: page > 0 ? limit * (page - 1) : undefined,
+    }
     );
 
    return result;

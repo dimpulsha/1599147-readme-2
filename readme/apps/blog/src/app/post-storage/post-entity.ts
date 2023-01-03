@@ -1,7 +1,7 @@
 import { Logger } from "@nestjs/common";
-import { PostInterface, ContentInterface } from '@readme/shared';
+import { PostInterface, ContentInterface, TagInterface } from '@readme/shared';
 
-export class PostEntity implements PostInterface {
+export class PostEntity  {
   public id?: number;
   public userId: string;
   public contentType: string;
@@ -15,7 +15,7 @@ export class PostEntity implements PostInterface {
   public postState: string;
   public createDate?: Date;
   public publicationDate?: Date;
-  public tagList?: string[];
+  public tagList?: TagInterface[];
 
   constructor(post: PostInterface) {
     this.fillEntity(post);

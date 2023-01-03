@@ -1,5 +1,5 @@
 import { ContentInterface } from "./content.interface";
-
+import { TagInterface } from "./tag.interface";
 
 export interface PostInterface {
   id?: number;
@@ -16,5 +16,5 @@ export interface PostInterface {
   postState?: string;
   createDate?: Date;
   publicationDate?: Date;
-  tagList?: string[];
+  tagList?: TagInterface[];
 }

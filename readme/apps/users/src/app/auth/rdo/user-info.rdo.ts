@@ -1,12 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Expose } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 
 export class UserInfoRDO {
 
   @ApiProperty({
      description: 'The uniq user ID',
      example: '1ca630bedee5485068bgc80ca5a57edc'
-   })
+  })
+  @Transform(({ obj }) => obj._id.toString())
   @Expose({ name: '_id'})
   public id: string;
 
@@ -22,14 +23,7 @@ export class UserInfoRDO {
      example: 'John'
    })
   @Expose()
-  public firstName: string;
-
-  @ApiProperty({
-     description: 'User last name',
-     example: 'Smith'
-   })
-  @Expose()
-  public lastName: string;
+  public userName: string;
 
   @ApiProperty({
      description: 'Avatar image file name',
