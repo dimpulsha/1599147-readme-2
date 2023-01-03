@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import databaseConfig from '../config/database.config';
 import { getMongoDbConfig } from '../config/mongo.config';
 import { ENV_FILE_PATH } from './app.constant';
-import { validateDBEnvironments } from './env-db-config.validation';
+import { validateEnvironments } from './env-notify-config.validation';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -12,7 +12,7 @@ import { validateDBEnvironments } from './env-db-config.validation';
     isGlobal: true,
     envFilePath: ENV_FILE_PATH,
     load: [databaseConfig],
-    validate: validateDBEnvironments,
+    validate: validateEnvironments,
   }),
     MongooseModule.forRootAsync(
       getMongoDbConfig()

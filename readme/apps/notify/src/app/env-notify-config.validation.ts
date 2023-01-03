@@ -1,8 +1,8 @@
 import { plainToInstance } from 'class-transformer';
 import { IsString, IsNumber, Max, Min, validateSync } from 'class-validator';
-import { MongoConfigValidationMessage, MIN_PORT, MAX_PORT } from './app.constant';
+import { MongoConfigValidationMessage, MIN_PORT, MAX_PORT, RabbitConfigValidationMessage } from './app.constant';
 
-export class MongoDBConfig {
+export class NotifyServiceConfig {
 
   @IsString({
       message: MongoConfigValidationMessage.DBNameRequired
@@ -39,10 +39,31 @@ export class MongoDBConfig {
     message: MongoConfigValidationMessage.DBBaseAuthRequired
   })
   public NOTIFY_MONGO_AUTH_BASE: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQUserRequired
+  })
+  public RMQ_USER: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQPasswordRequired
+  })
+  public RMQ_PASSWORD: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQHostRequired
+  })
+  public RMQ_HOST: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQServiceQueueRequired
+  })
+  public RMQ_NOTIFY_SERVICE_QUEUE: string;
+
 }
 
-export function validateDBEnvironments(configDB: Record<string, unknown>) {
-  const dbConfigItem = plainToInstance(MongoDBConfig, configDB, {
+export function validateEnvironments(config: Record<string, unknown>) {
+  const dbConfigItem = plainToInstance(NotifyServiceConfig, config, {
     enableImplicitConversion: true,
   });
 
