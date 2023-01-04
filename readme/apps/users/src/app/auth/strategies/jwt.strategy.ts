@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ email, userName, avatarImg }: Pick<UserInterface, 'email' | 'userName' | 'avatarImg'>) {
-    return { email, userName, avatarImg };
+  async validate({ _id, email, userName, avatarImg }: Pick<UserInterface, | '_id' | 'email' | 'userName' | 'avatarImg'>) {
+    return { _id, email, userName, avatarImg };
   }
 }

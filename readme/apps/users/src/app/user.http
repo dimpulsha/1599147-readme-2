@@ -4,7 +4,7 @@ POST http://localhost:3333/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "58@fill.com",
+  "email": "59@fill.com",
   "userName": "John Snow",
   "avatarImg": "test.img",
   "password": "123456"
@@ -16,7 +16,7 @@ POST http://localhost:3333/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "1@fill.com",
+  "email": "59@fill.com",
   "password": "123456"
 }
 ###
@@ -27,8 +27,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzhjZTQ2O
 
 ###
 ## обновление пароля
-PATCH http://localhost:3333/api/auth/update/63b003167bc39d1c77c1fe24 HTTP/1.1
+PATCH http://localhost:3333/api/auth/update/63b42211281c1e71a3efd966 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2I0MjIxMTI4MWMxZTcxYTNlZmQ5NjYiLCJlbWFpbCI6IjU5QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3Mjc0OTYxNiwiZXhwIjoxNjcyODM2MDE2fQ.QLtV7sVed63P5rFxBSPT_PFCSBC0UwuOUYTtliEIVJM
 
 {
   "oldPassword": "123456",

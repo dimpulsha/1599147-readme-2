@@ -3,7 +3,7 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { BlogUserDBRepository } from '../blog-user/blog-user-db-repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
-import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, METHOD_NOT_IMPLEMENTED } from './constants/auth-constant';
+import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND} from './constants/auth-constant';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
 import { ConfigService } from '@nestjs/config';
@@ -23,7 +23,7 @@ export class AuthService {
 
   }
 
-  async register(dto: CreateUserDTO) {
+  public async register(dto: CreateUserDTO): Promise<UserInterface> {
     const blogUser = {
       email: dto.email,
       userName: dto.userName,
@@ -44,7 +44,7 @@ export class AuthService {
   }
 
 
-  async verifyUser(dto: LoginUserDTO) {
+  public async verifyUser(dto: LoginUserDTO) {
 
     const { email, password } = dto;
     const existUser = await this.blogUserRepository.getByEmail(email);
@@ -64,7 +64,7 @@ export class AuthService {
 
   }
 
-  async getUser(id: string) {
+  public async getUser(id: string) {
 
     const existUser = await this.blogUserRepository.getById(id)
     if (!existUser) {
@@ -75,9 +75,19 @@ export class AuthService {
     return existUser;
   }
 
-  async updatePWD(dto: UpdatePasswordDTO) {
-      Logger.error(METHOD_NOT_IMPLEMENTED);
-      return (`${METHOD_NOT_IMPLEMENTED} ${JSON.stringify(dto)} `);
+  async updatePWD(id: string, dto: UpdatePasswordDTO): Promise<UserInterface> {
+    const existUser = await this.getUser(id)
+    const blogUserEntity = new BlogUserEntity(existUser);
+
+    if (! await blogUserEntity.comparePassword(dto.oldPassword)) {
+      Logger.error(AUTH_LOGIN_WRONG);
+      throw new UnauthorizedException(AUTH_LOGIN_WRONG);
+    }
+
+    await blogUserEntity.setPassword(dto.newPassword);
+    const result = await this.blogUserRepository.update(id, blogUserEntity);
+
+    return result
   }
 
   public async loginUser(user: UserInterface) {

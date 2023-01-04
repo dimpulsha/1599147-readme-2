@@ -9,6 +9,7 @@ import { UserInfoRDO } from './rdo/user-info.rdo';
 import { METHOD_NOT_IMPLEMENTED } from './constants/auth-constant';
 import { MongoIdValidationPipe } from '../pipes/mongo-validation.pipe';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { UpdatePasswordDTO } from './dto/update-pwd.dto';
 
 
 @ApiTags('auth')
@@ -68,7 +69,6 @@ export class AuthController {
     console.log(id);
     Logger.log('accept Post request auth/:id');
     return (METHOD_NOT_IMPLEMENTED);
-
   }
 
   @UseGuards(JwtAuthGuard)
@@ -78,11 +78,11 @@ export class AuthController {
     status: HttpStatus.OK,
     description: 'User password updated'
   })
-  public async update(@Param('id', MongoIdValidationPipe) id: string) {
-    console.log(id);
+  public async update(@Param('id', MongoIdValidationPipe) id: string, @Body() dto: UpdatePasswordDTO) {
 
-    Logger.log('accept update auth/update/:id');
-    return (METHOD_NOT_IMPLEMENTED);
+    Logger.log(`accept update auth/update/ ${id}`);
+    const result = await this.authService.updatePWD(id, dto);
+    return fillObject(UserInfoRDO, result);
   }
 
 }
