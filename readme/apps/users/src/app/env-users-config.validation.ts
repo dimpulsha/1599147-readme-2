@@ -1,8 +1,9 @@
 import { plainToInstance } from 'class-transformer';
 import { IsString, IsNumber, Max, Min, validateSync } from 'class-validator';
 import { MongoConfigValidationMessage, MIN_PORT, MAX_PORT } from './app.constant';
+import { RabbitConfigValidationMessage } from './auth/constants/auth-constant';
 
-export class MongoDBConfig {
+export class UserConfig {
 
   @IsString({
       message: MongoConfigValidationMessage.DBNameRequired
@@ -39,14 +40,35 @@ export class MongoDBConfig {
     message: MongoConfigValidationMessage.DBBaseAuthRequired
   })
   public MONGO_AUTH_BASE: string;
+
+    @IsString({
+    message: RabbitConfigValidationMessage.RMQUserRequired
+  })
+  public RMQ_USER: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQPasswordRequired
+  })
+  public RMQ_PASSWORD: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQHostRequired
+  })
+  public RMQ_HOST: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQServiceQueueRequired
+  })
+  public RMQ_NOTIFY_SERVICE_QUEUE: string;
+
 }
 
-export function validateDBEnvironments(configDB: Record<string, unknown>) {
-  const dbConfigItem = plainToInstance(MongoDBConfig, configDB, {
+export function validateEnvironments(config: Record<string, unknown>) {
+  const userConfigItem = plainToInstance(UserConfig, config, {
     enableImplicitConversion: true,
   });
 
-  const validationErrors = validateSync(dbConfigItem, {
+  const validationErrors = validateSync(userConfigItem, {
     skipMissingProperties: false
   })
 
@@ -56,7 +78,7 @@ export function validateDBEnvironments(configDB: Record<string, unknown>) {
       throw new Error (validationErrors.toString())
   }
 
-  return dbConfigItem;
+  return userConfigItem;
 
 }
 

@@ -4,6 +4,7 @@ import { PostInterface, TagInterface } from '@readme/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { PostQuery } from '../post-api/query/post-query';
+
 @Injectable()
 export class PostRepository implements CRUDInterface<PostEntity, number, PostInterface> {
   constructor(private readonly prisma: PrismaService) { }

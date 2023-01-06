@@ -14,3 +14,11 @@ export enum UserValidation {
 export const USER_LENGTH_VIOLATION = `Invalid User Name length: min ${UserValidation.MinUserName} - max ${UserValidation.MaxUserName}`;
 export const PASSWORD_LENGTH_VIOLATION = `Invalid password length: min ${UserValidation.MinUserPassword} - max ${UserValidation.MaxUserPassword}`;
 
+export enum RabbitConfigValidationMessage {
+  RMQUserRequired = 'Rabbit MQ user required',
+  RMQPasswordRequired = 'Rabbit MQ user password required',
+  RMQHostRequired = 'Rabbit MQ host required',
+  RMQServiceQueueRequired = 'Rabbit MQ service queue required'
+}
+
+export const RABBITMQ_USER_SERVICE = Symbol('RABBITMQ_USER_SERVICE');

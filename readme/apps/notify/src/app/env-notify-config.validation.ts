@@ -1,6 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { IsString, IsNumber, Max, Min, validateSync } from 'class-validator';
-import { MongoConfigValidationMessage, MIN_PORT, MAX_PORT, RabbitConfigValidationMessage } from './app.constant';
+import { MongoConfigValidationMessage, MIN_PORT, MAX_PORT, RabbitConfigValidationMessage, MailConfigValidationMessage } from './app.constant';
 
 export class NotifyServiceConfig {
 
@@ -60,14 +60,45 @@ export class NotifyServiceConfig {
   })
   public RMQ_NOTIFY_SERVICE_QUEUE: string;
 
+   @IsString({
+     message: MailConfigValidationMessage.SMTPHostRequired
+   })
+   public MAIL_SMTP_HOST: string;
+
+   @IsNumber({}, {
+     message: MailConfigValidationMessage.SMTPPortRequired
+   })
+  @Min(MIN_PORT, {
+    message: `Min port value is ${MIN_PORT}`
+  })
+  @Max(MAX_PORT, {
+    message: `Max port value is ${MAX_PORT}`
+  })
+   public MAIL_SMTP_PORT: number;
+
+   @IsString({
+     message: MailConfigValidationMessage.SMTPUserRequired
+   })
+   public MAIL_USER_NAME: string;
+
+   @IsString({
+     message: MailConfigValidationMessage.SMTPPasswordRequired
+   })
+   public MAIL_USER_PASSWORD: string;
+
+   @IsString({
+     message: MailConfigValidationMessage.MailFromFromRequired
+   })
+   public MAIL_FROM: string;
+
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {
-  const dbConfigItem = plainToInstance(NotifyServiceConfig, config, {
+  const configItem = plainToInstance(NotifyServiceConfig, config, {
     enableImplicitConversion: true,
   });
 
-  const validationErrors = validateSync(dbConfigItem, {
+  const validationErrors = validateSync(configItem, {
     skipMissingProperties: false
   })
 
@@ -77,7 +108,7 @@ export function validateEnvironments(config: Record<string, unknown>) {
       throw new Error (validationErrors.toString())
   }
 
-  return dbConfigItem;
+  return configItem;
 
 }
 
