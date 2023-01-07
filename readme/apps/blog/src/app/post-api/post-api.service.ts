@@ -1,17 +1,19 @@
-import { Injectable} from '@nestjs/common';
+import { Inject, Injectable} from '@nestjs/common';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { PostEntity } from '../post-storage/post-entity';
-import { PostInterface, PostStateEnum, TagInterface } from '@readme/shared';
+import { NotifyCommandEnum, PostInterface, PostStateEnum, TagInterface } from '@readme/shared';
 import { PostRepository } from '../post-storage/post.repository';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { PostQuery } from './query/post-query';
-// import { TagDTO } from './dto/post-content.dto/tag.dto';
+import { POST_URL_BASE, RABBITMQ_BLOG_SERVICE} from './constants/post.constants'
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class PostApiService {
 
   constructor(
-    private readonly postRepository: PostRepository
+    private readonly postRepository: PostRepository,
+    @Inject(RABBITMQ_BLOG_SERVICE) private readonly rabbitClient: ClientProxy
   ) { }
 
   private postEntity: PostEntity;
@@ -28,11 +30,17 @@ export class PostApiService {
     const userId = 'bla-1234567890-bla-6';
     const postState = dto.postState ? dto.postState : PostStateEnum.Draft;
     this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getTags(dto.tagList) });
-    console.log(dto);
-    console.log(this.getTags(dto.tagList));
-    console.log(this.postEntity);
 
     const result = await this.postRepository.create(this.postEntity);
+    const postUrl = `${POST_URL_BASE}${result.id}`
+    this.rabbitClient.emit(
+      { cmd: NotifyCommandEnum.AddPost },
+        {
+        id: result.id,
+        url: postUrl
+      }
+    );
+
     return result;
   }
 
@@ -65,12 +73,9 @@ export class PostApiService {
     return result;
   }
 
-    public async switchLike(id: number, userId: string): Promise<boolean> {
+  public async switchLike(id: number, userId: string): Promise<boolean> {
     const result = await this.postRepository.like(id, userId);
     return result;
   }
-
-  //todo - мои публикации
-  //todo - моя лента
 
 }

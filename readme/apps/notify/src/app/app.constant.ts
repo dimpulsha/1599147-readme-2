@@ -16,5 +16,13 @@ export enum RabbitConfigValidationMessage {
   RMQServiceQueueRequired = 'Rabbit MQ service queue required',
 }
 
+export enum MailConfigValidationMessage {
+  SMTPHostRequired = 'SMTP Server is required',
+  SMTPUserRequired = 'SMTP Server user name is required',
+  SMTPPasswordRequired = 'SMTP Server password is required',
+  MailFromFromRequired = 'Default value for mail from field is required',
+  SMTPPortRequired = 'SMTP Server port is required',
+}
+
 export const MIN_PORT = 1025;
 export const MAX_PORT = 65535;

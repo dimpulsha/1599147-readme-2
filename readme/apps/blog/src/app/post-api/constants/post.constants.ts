@@ -36,3 +36,6 @@ export enum SortKind {
   SortByComments = 'commentCount',
   SortByDate = 'publicationDate'
 }
+
+export const RABBITMQ_BLOG_SERVICE = Symbol('RABBITMQ_BLOG_SERVICE');
+export const POST_URL_BASE = 'http://localhost:4444/api/blog/';

@@ -1,27 +1,23 @@
 import * as dayjs from 'dayjs';
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { BlogUserDBRepository } from '../blog-user/blog-user-db-repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
-import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND} from './constants/auth-constant';
+import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, RABBITMQ_USER_SERVICE} from './constants/auth-constant';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
-import { ConfigService } from '@nestjs/config';
-import { UserInterface } from '@readme/shared';
+import { NotifyCommandEnum, UserInterface } from '@readme/shared';
 import { JwtService } from '@nestjs/jwt';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
 
   constructor(
     private readonly blogUserRepository: BlogUserDBRepository,
-    private readonly configService: ConfigService,
-    private readonly jwtService: JwtService
-  ) {
-
-    console.log(this.configService.get<string>('database.port'));
-
-  }
+    private readonly jwtService: JwtService,
+    @Inject(RABBITMQ_USER_SERVICE) private readonly rabbitClient: ClientProxy
+  ) { }
 
   public async register(dto: CreateUserDTO): Promise<UserInterface> {
     const blogUser = {
@@ -40,7 +36,18 @@ export class AuthService {
     }
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(dto.password);
-    return await this.blogUserRepository.create(userEntity);
+    const result = await this.blogUserRepository.create(userEntity);
+
+    this.rabbitClient.emit(
+    { cmd: NotifyCommandEnum.AddSubscriber },
+      {
+      id: result._id.toString(),
+      email: result.email,
+      userName: result.userName,
+    }
+    );
+
+    return result;
   }
 
 

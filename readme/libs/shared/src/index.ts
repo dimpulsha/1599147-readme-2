@@ -10,3 +10,7 @@ export * from './lib/like.interface';
 export * from './lib/tag.interface';
 export * from './lib/content.interface';
 export * from './lib/sort-direction.enum';
+export * from './lib/subscriber.interface';
+export * from './lib/post-notify.interface';
+export * from './lib/notify-command-event.enum';
+export * from './lib/mail-command.enum';
