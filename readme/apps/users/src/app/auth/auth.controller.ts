@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { fillObject } from '@readme/core';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -10,7 +10,7 @@ import { METHOD_NOT_IMPLEMENTED } from './constants/auth-constant';
 import { MongoIdValidationPipe } from '../pipes/mongo-validation.pipe';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
-
+import { UserActionQuery } from './query/users-action.query';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -28,7 +28,6 @@ export class AuthController {
     Logger.log('accept request auth/register');
     const newUser = this.authService.register(dto);
     return fillObject(UserInfoRDO, newUser);
-
 }
 
   @Post('login')
@@ -41,8 +40,7 @@ export class AuthController {
   public async login(@Body() dto: LoginUserDTO) {
     Logger.log('accept request auth/login');
     const user = await this.authService.verifyUser(dto);
-    return this.authService.loginUser(user);
-
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,13 +48,12 @@ export class AuthController {
   @ApiResponse({
     type: UserInfoRDO,
     status: HttpStatus.OK,
-    description: 'The user found.'
+    description: 'Get user information'
   })
   public async getUser(@Param('id', MongoIdValidationPipe) id: string) {
     Logger.log('accept Get request auth/:id');
     const result = this.authService.getUser(id);
     return fillObject(UserInfoRDO, result);
-
   }
 
   @Post(':id')
@@ -85,4 +82,27 @@ export class AuthController {
     return fillObject(UserInfoRDO, result);
   }
 
+  @Patch('updatePostsStat/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Update post counter'
+  })
+  public async updatePostStats(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
+    Logger.log(`accept update auth/update/ ${id}`);
+    const result = await this.authService.updatePostStats(id, query);
+    return result;
+  }
+
+  @Patch('updateFriends/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Update post counter'
+  })
+  public async updateFriends(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
+    Logger.log(`accept update auth/update/ ${id}`);
+    const result = await this.authService.updateFriends(id, query);
+    return result;
+  }
 }

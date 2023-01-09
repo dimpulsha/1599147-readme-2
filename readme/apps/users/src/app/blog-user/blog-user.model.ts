@@ -1,4 +1,4 @@
-import { UserInterface } from "@readme/shared";
+import { FriendInterface, UserInterface } from "@readme/shared";
 import { Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
@@ -28,9 +28,10 @@ export class BlogUserModel extends Document implements UserInterface {
   public publicationCount: number;
 
   @Prop({
+    default: 0,
     required: true,
   })
-  public friends: number;
+  public friendsCount: number;
 
   @Prop({
     required: true,
@@ -41,6 +42,11 @@ export class BlogUserModel extends Document implements UserInterface {
     required: true,
   })
   public passwordHash: string;
+
+  @Prop({
+    default: [],
+  })
+  public friends: FriendInterface[]
 }
 
 export const BlogUserSchema = SchemaFactory.createForClass(BlogUserModel)

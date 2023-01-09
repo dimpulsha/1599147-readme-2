@@ -6,9 +6,10 @@ import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, RABBITMQ_USER_SERVICE} from './constants/auth-constant';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
-import { NotifyCommandEnum, UserInterface } from '@readme/shared';
+import { NotifyCommandEnum, UserActionEnum, UserInterface } from '@readme/shared';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
+import { UserActionQuery } from './query/users-action.query';
 
 @Injectable()
 export class AuthService {
@@ -25,9 +26,10 @@ export class AuthService {
       userName: dto.userName,
       avatarImg: dto.avatarImg ? dto.avatarImg : '',
       publicationCount: 0,
-      friends: 0,
+      friendsCount: 0,
       registrationDate: dayjs().toDate(),
-      passwordHash: ''
+      passwordHash: '',
+
     }
 
     if (await this.blogUserRepository.getByEmail(blogUser.email)) {
@@ -50,7 +52,6 @@ export class AuthService {
     return result;
   }
 
-
   public async verifyUser(dto: LoginUserDTO) {
 
     const { email, password } = dto;
@@ -67,7 +68,8 @@ export class AuthService {
       throw new UnauthorizedException(AUTH_LOGIN_WRONG);
     }
 
-    return blogUserEntity.toObject();
+   return this.loginUser(blogUserEntity.toObject())
+    // return blogUserEntity.toObject();
 
   }
 
@@ -109,4 +111,38 @@ export class AuthService {
     };
   }
 
+  public async updatePostStats(id: string, query: UserActionQuery): Promise<UserInterface> {
+    const existUser = await this.getUser(id);
+
+    switch (query.act) {
+      case UserActionEnum.PostInc:
+        existUser.publicationCount = ++existUser.publicationCount;
+        break;
+      case UserActionEnum.PostDec:
+        existUser.publicationCount = --existUser.publicationCount;
+        break
+      default: break
+    }
+
+    if (existUser.publicationCount < 0) { existUser.publicationCount = 0 }
+
+    return await this.blogUserRepository.update(id, new BlogUserEntity(existUser));
+  }
+
+  public async updateFriends(id: string, query:UserActionQuery): Promise<UserInterface> {
+
+    let result: UserInterface;
+      switch (query.act) {
+        case UserActionEnum.AddToFriends:
+          result = await this.blogUserRepository.addFriend(id, query.friendId);
+          return result
+        case UserActionEnum.RemoveFriend:
+          result = await this.blogUserRepository.removeFriend(id, query.friendId);
+          return result
+
+        default: break;
+
+    }
+
+  }
 }

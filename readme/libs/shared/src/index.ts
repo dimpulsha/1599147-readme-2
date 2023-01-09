@@ -14,3 +14,5 @@ export * from './lib/subscriber.interface';
 export * from './lib/post-notify.interface';
 export * from './lib/notify-command-event.enum';
 export * from './lib/mail-command.enum';
+export * from './lib/user-action.enum';
+export * from './lib/friend.interface';

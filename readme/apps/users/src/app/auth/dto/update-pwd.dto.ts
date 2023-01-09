@@ -8,7 +8,6 @@ export class UpdatePasswordDTO {
    })
   public oldPassword: string;
 
-
   @ApiProperty({
      description: 'User new password',
      example: '654321'
