@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { fillObject } from '@readme/core';
+import { fillObject, GetUser } from '@readme/core';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
+import { JwtAuthGuard } from './guards/jwt.guard';
 import { PostApiService } from './post-api.service';
 import { PostQuery } from './query/post-query';
 import { PostInfoRDO } from './rdo/post-info.rdo';
@@ -14,14 +15,18 @@ export class PostApiController {
 
   constructor(private readonly postAPIService: PostApiService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiResponse({
     // todo - update type: UserInfoRDO,
     status: HttpStatus.CREATED,
     description: 'The new post has been successfully created.'
   })
-  public async create(@Body() dto: CreatePostDTO) {
+  public async create(@GetUser('id') userId: string, @Body() dto: CreatePostDTO) {
     Logger.log('accept request blog/ for create blog post');
+
+    console.log(userId);
+
     const result = await this.postAPIService.create(dto);
 
     return fillObject(PostInfoRDO, result)

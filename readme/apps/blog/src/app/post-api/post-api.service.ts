@@ -28,7 +28,7 @@ export class PostApiService {
 
   public async create(dto: CreatePostDTO): Promise<PostInterface> {
     const userId = 'bla-1234567890-bla-6';
-    const postState = dto.postState ? dto.postState : PostStateEnum.Draft;
+    const postState = dto.postState ? dto.postState : PostStateEnum.Published;
     this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getTags(dto.tagList) });
 
     const result = await this.postRepository.create(this.postEntity);

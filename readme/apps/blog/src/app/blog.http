@@ -2,6 +2,7 @@
 ## Создать публикацию
 POST http://localhost:4444/api/blog HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
 
 {
 "contentType": "video",
