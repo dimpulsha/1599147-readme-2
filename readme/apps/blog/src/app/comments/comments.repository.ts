@@ -29,10 +29,13 @@ export class CommentRepository implements CRUDInterface<CommentEntity, number, C
     return result;
   }
 
-  public async getItemList({limit, page, sortDirection}: CommentsQuery): Promise<CommentInterface[]> {
+  public async getItemList({limit, page, sortDirection}: CommentsQuery, postId: number): Promise<CommentInterface[]> {
 
     const result = await this.prisma.comment.findMany({
-            take: limit,
+       where: {
+         postId: postId
+       },
+      take: limit,
       orderBy: [
          {
            id: sortDirection

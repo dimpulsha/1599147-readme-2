@@ -8,18 +8,18 @@ export class TextDTO {
   @Expose()
   @ApiProperty({
     description: 'Post title',
-    example: 'Hi! The first post',
-    maxLength: PostValidation.MaxPostText,
-    minLength: PostValidation.MinPostText
+    example: 'Hi! The first post in my blog',
+    maxLength: PostValidation.MaxPostTitle,
+    minLength: PostValidation.MinPostTitle
   })
   @IsString()
-  @Length(PostValidation.MinPostText, PostValidation.MaxPostText, { message: POST_TITLE_LENGTH_VIOLATION})
+  @Length(PostValidation.MinPostTitle, PostValidation.MaxPostTitle, { message: POST_TITLE_LENGTH_VIOLATION})
   postTitle: string;
 
   @Expose()
   @ApiProperty({
     description: 'Post review',
-    example: 'Hi! The first post of my blog about...',
+    example: 'Hi! The first post of my blog about... Coooooooooooool!',
     maxLength: PostValidation.MaxPostReview,
     minLength: PostValidation.MinPostReview
   })
@@ -30,7 +30,7 @@ export class TextDTO {
   @Expose()
   @ApiProperty({
     description: 'Post text',
-    example: 'Hi! The big text of post',
+    example: 'In addition to traditional (sometimes called monolithic) application architectures, Nest natively supports the microservice architectural style of development. Most of the concepts discussed elsewhere in this documentation, such as dependency injection, decorators, exception filters, pipes, guards and interceptors, apply equally to microservices.',
     maxLength: PostValidation.MaxPostText,
     minLength: PostValidation.MinPostText
   })

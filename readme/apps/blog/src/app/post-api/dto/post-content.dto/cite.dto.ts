@@ -7,7 +7,7 @@ export class CiteDTO {
   @Expose()
   @ApiProperty({
     description: 'Cite text',
-    example: 'blablabla',
+    example: 'In Nest, a microservice is fundamentally an application that uses a different transport layer than HTTP.',
     maxLength: PostValidation.MaxCiteText,
     minLength: PostValidation.MinCiteText
   })

@@ -1,9 +1,11 @@
 import { CRUDInterface } from '@readme/core';
 import { PostEntity } from './post-entity';
-import { PostInterface, TagInterface } from '@readme/shared';
+import { PostInterface, PostStateEnum, TagInterface } from '@readme/shared';
 import { PrismaService } from '../prisma/prisma.service';
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PostQuery } from '../post-api/query/post-query';
+import { SearchQuery } from '../post-api/query/search-query';
+import dayjs = require('dayjs');
 
 @Injectable()
 export class PostRepository implements CRUDInterface<PostEntity, number, PostInterface> {
@@ -63,9 +65,7 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
 
   }
 
-
-
-  public async getItemList({ limit, sortDirection, page, tag, contentType, sortKind, userId, postState }: PostQuery): Promise<PostInterface[]> {
+  public async getItemList({ limit, sortDirection, page, tag, contentType, sortKind, userId }: PostQuery, postState = PostStateEnum.Published): Promise<PostInterface[]> {
 
     const result = await this.prisma.post.findMany({
       where: {
@@ -101,6 +101,27 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
 
       return result.map((item) => (this.postTransformation(item)));
 
+  }
+
+  public async search({ searchList, limit }: SearchQuery): Promise<PostInterface[]>{
+    console.log(limit);
+
+
+    const result = await this.prisma.post.findMany({
+      where: {
+        content: {
+          postTitle: { contains: `${searchList}` }
+        }
+      },
+      take: limit,
+      include: {
+        contentType: true,
+        content: true,
+        tags: true,
+        postState: true,
+      },
+    })
+     return result.map((item) => (this.postTransformation(item)));
   }
 
   public async getById(id: number): Promise<PostInterface | null> {
@@ -182,9 +203,38 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
       },
     }
   );
-    console.log(result);
 
     return this.postTransformation(result);
+  }
+
+public async publicationItem( id: number): Promise<PostInterface> {
+
+ const result = await this.prisma.post.update({
+      where: {
+        id
+      },
+      data: {
+        postState: {
+          connectOrCreate: {
+            where: {
+              name: PostStateEnum.Published,
+            },
+            create: {
+              name: PostStateEnum.Published,
+            },
+          }
+        },
+        publicationDate: dayjs().toDate()
+      },
+      include: {
+        contentType: true,
+        content: true,
+        tags: true,
+        postState: true,
+      },
+    }
+  );
+  return this.postTransformation(result);
   }
 
   public async delete(id: number): Promise<void> {
@@ -206,7 +256,8 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
     });
 
     if (isRepost) {
-      return isRepost.id
+      throw new BadRequestException(`Post ${isRepost.id} has already been reposted`);
+      // return err;
     }
 
     const originPost = await this.prisma.post.findUnique({
@@ -222,7 +273,7 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
     }
     );
 
-    const { postName, postReview, postText, linkURL, photoLink, linkDescription, citeAuthor } = originPost.content;
+    const { postTitle, postReview, postText, linkURL, photoLink, linkDescription, citeAuthor } = originPost.content;
     const currentTagList = originPost.tags;
 
     const result = await this.prisma.post.create({
@@ -233,7 +284,7 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
             name: originPost.contentType.name,
           },
         },
-        content: { create: { postName, postReview, postText, linkURL, photoLink, linkDescription, citeAuthor } },
+        content: { create: { postTitle, postReview, postText, linkURL, photoLink, linkDescription, citeAuthor } },
         postState: {
           connectOrCreate: {
             where: {
@@ -308,7 +359,9 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
 
     return true;
 
-   }
+  }
+
+
 
 }
 

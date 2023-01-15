@@ -8,19 +8,20 @@ export class VideoDTO {
   @ApiProperty({
     description: 'Post title',
     example: 'Hi! The first post',
-    maxLength: PostValidation.MaxPostText,
-    minLength: PostValidation.MinPostText
+    required: true,
+    minLength: PostValidation.MinPostTitle,
+    maxLength: PostValidation.MaxPostTitle
   })
   @IsString()
-  @Length(PostValidation.MinPostText, PostValidation.MaxPostText, { message: POST_TITLE_LENGTH_VIOLATION})
+  @Length( PostValidation.MinPostTitle, PostValidation.MaxPostTitle, { message: POST_TITLE_LENGTH_VIOLATION})
   postTitle: string;
 
   @Expose()
   @ApiProperty({
-     description: 'Link ',
-     example: 'https://site.test/video'
+    description: 'Link',
+    example: 'https://site.test/video',
+    required: true,
   })
   @IsUrl()
   linkURL: string;
-
 }

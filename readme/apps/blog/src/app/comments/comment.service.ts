@@ -1,4 +1,4 @@
-import { Injectable} from '@nestjs/common';
+import { BadRequestException, Injectable} from '@nestjs/common';
 import { CommentInterface } from '@readme/shared';
 import { CommentEntity } from './comment.entity';
 import { CommentRepository } from './comments.repository';
@@ -13,8 +13,13 @@ export class CommentService {
     private readonly commentRepository: CommentRepository
   ) { }
 
-  public async create(dto: CreateCommentDTO, postId: number): Promise<CommentInterface> {
-    const userId = 'bla-1234567890-bla-8';
+  private async checkOwner(itemId: number, userId: string): Promise<boolean> {
+  const currentItem = await this.getItem(itemId);
+  if (currentItem.userId === userId) return true;
+   return false;
+  }
+
+  public async create(dto: CreateCommentDTO, postId: number, userId: string): Promise<CommentInterface> {
     const commentEntity = new CommentEntity({ ...dto, userId, postId });
     console.log(commentEntity);
 
@@ -22,25 +27,35 @@ export class CommentService {
     return result;
   }
 
-    public async index(query: CommentsQuery) {
-    const result = await this.commentRepository.getItemList(query);
+    public async index(query: CommentsQuery, postId: number): Promise<CommentInterface[]>  {
+    const result = await this.commentRepository.getItemList(query, postId);
     return result;
   }
 
-  public async getItem(id: number): Promise<CreateCommentDTO | null> {
+  public async getItem(id: number): Promise<CommentInterface | null> {
     const result = await this.commentRepository.getById(id);
     return result;
   }
 
-  public async updateItem(id: number, dto: UpdateCommentDTO): Promise<CommentInterface> {
+  public async updateItem(id: number, dto: UpdateCommentDTO, userId: string): Promise<CommentInterface> {
     const commentEntity = new CommentEntity({ ...dto });
 
-    const result = await this.commentRepository.update(id, commentEntity);
+    if (this.checkOwner(id, userId)) {
+     const result = await this.commentRepository.update(id, commentEntity);
     return result;
+
+    }
+     throw new BadRequestException();
   }
 
-  public async deleteItem(id: number): Promise<void>  {
-   await this.commentRepository.delete(id);
+
+  public async deleteItem(id: number, userId: string): Promise<void>  {
+  if(this.checkOwner(id, userId)) {
+
+    await this.commentRepository.delete(id);
+  } else {
+  throw new BadRequestException();
+  }
 
   }
 }

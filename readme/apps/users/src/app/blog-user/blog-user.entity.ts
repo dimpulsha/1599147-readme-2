@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { UserInterface } from '@readme/shared';
+import { FriendInterface, UserInterface } from '@readme/shared';
 import { genSalt, compare, hash } from 'bcrypt';
 import { SALT_ROUNDS } from './blog-user.constant';
 
@@ -9,9 +9,9 @@ export class BlogUserEntity implements UserInterface {
   public userName: string;
   public avatarImg: string;
   public publicationCount: number;
-  public friends: number;
   public registrationDate: Date;
   public passwordHash: string;
+  public friends?: FriendInterface[];
 
   constructor(blogUser: UserInterface) {
     this.fillEntity(blogUser);
@@ -38,10 +38,11 @@ export class BlogUserEntity implements UserInterface {
     this.avatarImg = blogUser.avatarImg;
     this.email = blogUser.email;
     this.userName = blogUser.userName;
-    this.friends = blogUser.friends;
     this.passwordHash = blogUser.passwordHash;
     this.publicationCount = blogUser.publicationCount;
     this.registrationDate = blogUser.registrationDate;
+    this.friends = blogUser.friends;
+
   }
 
 }

@@ -44,7 +44,7 @@ export class UserInfoRDO {
      example: '24'
    })
   @Expose()
-  public friends: number;
+  public friendsCount: number;
 
   @ApiProperty({
      description: 'User registration date',

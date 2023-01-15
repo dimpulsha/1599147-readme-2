@@ -3,43 +3,41 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function fillDb() {
-  await prisma.post.upsert({
+  await prisma.contentType.upsert({
     where: { id: 1 },
     update: {},
     create: {
-      userId: '42',
-      contentType: {
-        create: {
-          name: 'text'
-        }
-      },
-      content: {
-        create: {
-          postName: 'the first post',
-          postReview: 'the post about life',
-          postText: 'I am start study next.js'
-        }
-        },
-      isRepost: false,
-      postState: {
-        create: {
-          name: 'draft'
-        }
-      },
-      tags: {
-        create: [
-          {
-            iserId: '42',
-            name: '#dayLog',
-          },
-          {
-            iserId: '42',
-            name: '#JavaScript',
-          }
-        ]
-      }
+      name: 'video',
     }
   });
+  await prisma.contentType.upsert({
+    where: { id: 2 },
+    update: {},
+    create: {
+    name: 'text',
+    }
+  });
+  await prisma.contentType.upsert({
+  where: { id: 3 },
+  update: {},
+  create: {
+  name: 'cite',
+  }
+  });
+  await prisma.contentType.upsert({
+  where: { id: 4 },
+  update: {},
+  create: {
+  name: 'photo',
+  }
+  });
+  await prisma.contentType.upsert({
+  where: { id: 5 },
+  update: {},
+  create: {
+  name: 'link',
+  }
+});
 }
 
 

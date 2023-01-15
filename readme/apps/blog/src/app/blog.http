@@ -1,53 +1,195 @@
 #Публикация
-## Создать публикацию
-POST http://localhost:4444/api/blog HTTP/1.1
+## Создать публикацию (video)
+POST http://localhost:4444/api/blog/video HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
 
 {
 "contentType": "video",
 "content": {
-  "postName": "bebebeb",
-  "postText": "Life is life",
-  "citeAuthor": "Author"
+  "postTitle": "Title video post for test",
+  "linkURL": "https://bla-bla-bla.example"
   },
-"tagList": ["foor", "second", "new"]
+"postState": "draft",
+"tagList": ["VideoTag1", "VideoTag2", "VideoTag3"]
 }
 ###
+## Создать публикацию (text)
+POST http://localhost:4444/api/blog/text HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "text",
+"content": {
+  "postTitle": "Hi! The first post in my blog",
+  "postReview": "Hi! The first post of my blog about... Coooooooooooool!",
+  "postText": "In addition to traditional (sometimes called monolithic) application architectures, Nest natively supports the microservice architectural style of development. Most of the concepts discussed elsewhere in this documentation, such as dependency injection, decorators, exception filters, pipes, guards and interceptors, apply equally to microservices."
+  },
+"tagList": ["TextTag1", "TextTag2", "TextTag3"]
+}
+###
+## Создать публикацию (cite)
+POST http://localhost:4444/api/blog/cite HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "cite",
+"content": {
+  "postText": "In Nest, a microservice is fundamentally an application that uses a different transport layer than HTTP.",
+  "citeAuthor": "Great man"
+  },
+"postState": "draft",
+"tagList": ["CiteTag1", "CiteTag2", "CiteTag3"]
+}
+###
+
+## Создать публикацию (photo)
+POST http://localhost:4444/api/blog/photo HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "photo",
+"content": {
+  "photoLink": "http://localhost:4444/storage/EM08O-y2GMwYaLFxbIiXz.jpeg"
+  },
+"tagList": ["PhotoTag1", "PhotoTag2", "PhotoTag3"]
+}
+###
+## Создать публикацию (link)
+POST http://localhost:4444/api/blog/link HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "video",
+"content": {
+  "linkURL": "https://news.test/great-news.html",
+  "linkDescription": "The great news from space"
+  },
+"tagList": ["LinkTag1", "LinkTag2", "LinkTag3"]
+}
+###
+## Загрузка файла (photo)
+ curl http://localhost:4444/api/blog/upload -F 'image=@./photo.jpg' -F 'name=photo'
+###
+
+## Обновить публикацию (video)
+PATCH  http://localhost:4444/api/blog/video/10 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "video",
+"content": {
+  "postTitle": "Title video post for test",
+  "linkURL": "https://bla-bla-bla.ex"
+  },
+"tagList": ["VideoTag1", "VideoTag2", "VideoTag30"]
+}
+###
+## Обновить публикацию (text)
+PATCH http://localhost:4444/api/blog/text/id HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "text",
+"content": {
+  "postTitle": "Hi! The first post in my blog",
+  "postReview": "Hi! The first post of my blog about... Coooooooooooool!",
+  "postText": "In addition to traditional (sometimes called monolithic) application architectures, Nest natively supports the microservice architectural style of development. Most of the concepts discussed elsewhere in this documentation, such as dependency injection, decorators, exception filters, pipes, guards and interceptors, apply equally to microservices."
+  },
+"tagList": ["TextTag1", "TextTag2", "TextTag3"]
+}
+###
+## Обновить публикацию (cite)
+PATCH http://localhost:4444/api/blog/cite/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "cite",
+"content": {
+  "postText": "In Nest, a microservice is fundamentally an application that uses a different transport layer than HTTP.",
+  "citeAuthor": "Great man"
+  },
+"tagList": ["CiteTag1", "CiteTag2", "CiteTag3"]
+}
+###
+
+## Обновить публикацию (photo)
+PATCH http://localhost:4444/api/blog/photo HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "photo",
+"content": {
+  "photoLink": "http://localhost:4444/storage/EM08O-y2GMwYaLFxbIiXz.jpeg"
+  },
+"tagList": ["PhotoTag1", "PhotoTag2", "PhotoTag3"]
+}
+###
+## Обновить публикацию (link)
+PATCH http://localhost:4444/api/blog/link/:id HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+{
+"contentType": "video",
+"content": {
+  "linkURL": "https://news.test/great-news.html",
+  "linkDescription": "The great news from space"
+  },
+"tagList": ["LinkTag1", "LinkTag2", "LinkTag300"]
+}
+###
+
 ## Список публикаций
 GET http://localhost:4444/api/blog/?sortDirection=asc HTTP/1.1
 Content-Type: application/json
 
 ###
 ## Запрос публикации
-GET http://localhost:4444/api/blog/4 HTTP/1.1
+GET http://localhost:4444/api/blog/1 HTTP/1.1
 Content-Type: application/json
 
-###
-## Обновление публикации
-PATCH http://localhost:4444/api/blog/666 HTTP/1.1
-Content-Type: application/json
-
-{
-  "content": {
-  "postReview": "No problem-3"
-  },
-"tagList": ["bad", "dad"]
-}
 ###
 ## Удаление публикации
 DELETE  http://localhost:4444/api/blog/5 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
 
 ###
 ## Лайк
-POST http://localhost:4444/api/blog/like/1 HTTP/1.1
+POST http://localhost:4444/api/blog/like/4 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
 
 ###
 ## Репост публикации
 POST http://localhost:4444/api/blog/repost/4 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
 
 ###
+## Поиск публикации
+GET  http://localhost:4444/api/blog/search?searchList=video HTTP/1.1
+Content-Type: application/json
 
+###
+## Запрс черновиков
+GET  http://localhost:4444/api/blog/draft HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
 
+###
+## Публикация
+PATCH   http://localhost:4444/api/blog/publication/5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3MzM0NTM1MCwiZXhwIjoxNjc0MjA5MzUwfQ.I1Z6ZzPcJE4xWD18OmV_n0ZiNrzUw_29iJjF6a9nhmg
+
+###

@@ -1,16 +1,17 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, HttpCode, HttpStatus, Logger, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { fillObject } from '@readme/core';
-import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiOperation, ApiCreatedResponse, ApiHeader, ApiBadRequestResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { LoginUserDTO } from './dto/login-user.dto';
-// import { LoggedUserRDO } from './rdo/logged-user.rdo';
 import { UserInfoRDO } from './rdo/user-info.rdo';
-import { METHOD_NOT_IMPLEMENTED } from './constants/auth-constant';
+import { IMAGE_FILE_TYPE, MAX_PHOTO_SIZE, METHOD_NOT_IMPLEMENTED } from './constants/auth-constant';
 import { MongoIdValidationPipe } from '../pipes/mongo-validation.pipe';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
-
+import { UserActionQuery } from './query/users-action.query';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { STATIC_ROOT_PATH } from '../app.constant';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -28,7 +29,6 @@ export class AuthController {
     Logger.log('accept request auth/register');
     const newUser = this.authService.register(dto);
     return fillObject(UserInfoRDO, newUser);
-
 }
 
   @Post('login')
@@ -41,8 +41,7 @@ export class AuthController {
   public async login(@Body() dto: LoginUserDTO) {
     Logger.log('accept request auth/login');
     const user = await this.authService.verifyUser(dto);
-    return this.authService.loginUser(user);
-
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,13 +49,12 @@ export class AuthController {
   @ApiResponse({
     type: UserInfoRDO,
     status: HttpStatus.OK,
-    description: 'The user found.'
+    description: 'Get user information'
   })
   public async getUser(@Param('id', MongoIdValidationPipe) id: string) {
     Logger.log('accept Get request auth/:id');
     const result = this.authService.getUser(id);
     return fillObject(UserInfoRDO, result);
-
   }
 
   @Post(':id')
@@ -84,5 +82,70 @@ export class AuthController {
     const result = await this.authService.updatePWD(id, dto);
     return fillObject(UserInfoRDO, result);
   }
+
+  @Patch('updatePostsStat/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Update post counter'
+  })
+  public async updatePostStats(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
+    Logger.log(`accept update auth/update/ ${id}`);
+    const result = await this.authService.updatePostStats(id, query);
+    return result;
+  }
+
+  @Patch('updateFriends/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Update post counter'
+  })
+  public async updateFriends(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
+    Logger.log(`accept update auth/update/ ${id}`);
+    const result = await this.authService.updateFriends(id, query);
+    return result;
+  }
+
+  @Post('upload/:id')
+  @ApiOperation({ summary: 'Upload post image' })
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'Bearer token',
+  })
+  @ApiCreatedResponse({
+    status: HttpStatus.OK,
+    description: 'The file is uploaded',
+    type: UserInfoRDO,
+  })
+  @ApiBadRequestResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+  })
+  @ApiUnauthorizedResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+  })
+  // @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  public async uploadFile(
+    @Param('id') id: string,
+    @UploadedFile(
+      new ParseFilePipe(
+        {
+      validators: [
+        new MaxFileSizeValidator({ maxSize: MAX_PHOTO_SIZE }),
+        new FileTypeValidator({ fileType: IMAGE_FILE_TYPE }),
+      ],
+        })
+    )
+    file: Express.Multer.File,
+  )
+  {
+    const fileUrl = `http://localhost:3333/${STATIC_ROOT_PATH}/${file.filename}`;
+    const result = await this.authService.updateImg(id, fileUrl)
+
+    return fillObject(UserInfoRDO, result);
+      }
 
 }

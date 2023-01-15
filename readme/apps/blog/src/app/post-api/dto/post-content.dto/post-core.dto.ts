@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ContentTypeEnum, PostStateEnum } from "@readme/shared";
 import { Expose } from "class-transformer";
-import { ArrayMaxSize, IsArray, IsEnum, IsOptional, Length, ValidateNested } from "class-validator";
-import { CONTENT_TYPE_VIOLATION, PostValidation, POST_STATE_VIOLATION, POST_TAG_LENGTH_VIOLATION, TAG_COUNT_VIOLATION } from "../constants/post.constants";
-import { ContentDTO } from "./post-content.dto/content.dto";
-// import { TagDTO } from "./post-content.dto/tag.dto";
-export class UpdatePostDTO {
+import { ArrayMaxSize, IsArray, IsEnum, IsOptional, Length } from "class-validator";
+import { CONTENT_TYPE_VIOLATION, PostValidation, POST_STATE_VIOLATION, POST_TAG_LENGTH_VIOLATION, TAG_COUNT_VIOLATION } from "../../constants/post.constants";
 
- @Expose()
+
+export class PostCoreDTO {
+
+  @Expose()
   @ApiProperty({
     description: 'Post content type',
     example: 'text'
@@ -20,21 +20,15 @@ export class UpdatePostDTO {
     description: 'Post content',
     example: 'Post content example'
   })
-  @ValidateNested()
-  content: ContentDTO;
 
-  @Expose()
-  @ApiProperty({
-    description: 'Post state',
-    example: 'draft | published'
-  })
   @IsEnum(PostStateEnum, { message: POST_STATE_VIOLATION })
-  public postState: PostStateEnum;
+  @IsOptional()
+  public postState?: PostStateEnum;
 
   @Expose()
   @ApiProperty({
     description: 'List of publication tags',
-    example: '[cats, joke, smile]'
+    example: '[cats] [joke] [smile]'
   })
   @IsArray()
   @IsOptional()
@@ -42,4 +36,3 @@ export class UpdatePostDTO {
   @Length(PostValidation.MinTagLength, PostValidation.MaxTagLength, {each: true, message: POST_TAG_LENGTH_VIOLATION})
   public tagList?: string[];
 }
-

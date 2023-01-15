@@ -8,6 +8,6 @@ export const jwtOptions = registerAs('jwt', () => ({
 export async function getJwtConfig(configService: ConfigService): Promise<JwtModuleOptions> {
   return {
     secret: configService.get<string>('jwt.secret'),
-    signOptions: { expiresIn: '1d', algorithm: 'HS256' }
+    signOptions: { expiresIn: '10d', algorithm: 'HS256' }
   }
 }

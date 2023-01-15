@@ -1,6 +1,6 @@
 export interface ContentInterface {
   id?: number;
-  postName?: string;
+  postTitle?: string;
   postReview?: string;
   postText?: string;
   linkURL?: string;
