@@ -7,3 +7,4 @@ export enum RabbitConfigValidationMessage {
 
 export const ENV_FILE_PATH = 'environments/.blog.env';
 
+export const STATIC_ROOT_PATH = 'storage';

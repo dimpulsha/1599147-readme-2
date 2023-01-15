@@ -1,4 +1,4 @@
-import { ContentTypeEnum, PostStateEnum, SortDirection } from '@readme/shared';
+import { ContentTypeEnum, SortDirection } from '@readme/shared';
 import { Transform } from 'class-transformer';
 import { IsArray, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { DEFAULT_POST_COUNT_LIMIT, SortKind } from '../constants/post.constants';
@@ -33,15 +33,11 @@ export class PostQuery {
   @Transform(({ value }) => value || SortKind.SortByDate)
   @IsOptional()
   @IsEnum(SortKind)
-  public sortKind? = SortKind.SortByDate; 
+  public sortKind? = SortKind.SortByDate;
 
   @IsOptional()
   @IsString()
   public userId?: string;
-
-  @IsOptional()
-  @IsEnum(PostStateEnum)
-  public postState?: PostStateEnum;
 
 }
 

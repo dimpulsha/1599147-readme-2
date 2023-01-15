@@ -31,6 +31,14 @@ export class BlogUserDBRepository implements CRUDInterface<BlogUserEntity, strin
     return result;
   }
 
+  public async updateImg(id: string, fileUrl: string): Promise<UserInterface> {
+    const item = await this.blogUserModel.findById({ _id: id }).exec();
+    item.avatarImg = fileUrl;
+    const result = this.blogUserModel.findByIdAndUpdate(id, item, { new: true }).exec()
+    Logger.log(`update user avatar . id = ${id}`);
+    return result;
+  }
+
   public async delete(id: string): Promise<void> {
     this.blogUserModel.deleteOne({ _id: id }).exec();
     Logger.log(`delete user. id = ${id}`);
@@ -47,17 +55,14 @@ export class BlogUserDBRepository implements CRUDInterface<BlogUserEntity, strin
   }
 
   public async addFriend(id: string, friendId: string): Promise<UserInterface> {
-    // const friend = await this.getById(friendId);
 
     const result = await this.blogUserModel.findByIdAndUpdate({ _id: id }, {$inc: {friendsCount: 1}, $addToSet: { friends: { friendId } } }, { new: true }).exec();
-    // console.log(result);
     return result;
   }
 
   public async removeFriend(id: string, friendId: string): Promise<UserInterface> {
     const result = await this.blogUserModel.findByIdAndUpdate({ _id: id }, { $inc: { friendsCount: -1 }, $pull: { friends: {friendId: friendId } } }, { new: true }).exec();
 
-    // console.log(result);
     return result;
   }
 }

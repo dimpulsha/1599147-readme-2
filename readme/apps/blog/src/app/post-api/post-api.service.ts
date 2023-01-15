@@ -1,12 +1,12 @@
-import { Inject, Injectable} from '@nestjs/common';
-import { CreatePostDTO } from './dto/create-post.dto';
+import { BadRequestException, Inject, Injectable} from '@nestjs/common';
 import { PostEntity } from '../post-storage/post-entity';
 import { NotifyCommandEnum, PostInterface, PostStateEnum, TagInterface } from '@readme/shared';
 import { PostRepository } from '../post-storage/post.repository';
-import { UpdatePostDTO } from './dto/update-post.dto';
 import { PostQuery } from './query/post-query';
 import { POST_URL_BASE, RABBITMQ_BLOG_SERVICE} from './constants/post.constants'
 import { ClientProxy } from '@nestjs/microservices';
+import { PostDTO } from './dto/post.dto';
+import { SearchQuery } from './query/search-query';
 
 @Injectable()
 export class PostApiService {
@@ -26,8 +26,13 @@ export class PostApiService {
     return tagList;
   }
 
-  public async create(dto: CreatePostDTO): Promise<PostInterface> {
-    const userId = 'bla-1234567890-bla-6';
+  private async checkOwner(itemId: number, userId: string): Promise<boolean> {
+    const currentItem = await this.getItem(itemId);
+    if (currentItem.userId === userId) return true;
+    return false;
+  }
+
+  public async create(userId: string, dto: PostDTO): Promise<PostInterface> {
     const postState = dto.postState ? dto.postState : PostStateEnum.Published;
     this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getTags(dto.tagList) });
 
@@ -44,7 +49,7 @@ export class PostApiService {
     return result;
   }
 
-  public async index(query: PostQuery) {
+  public async index(query: PostQuery): Promise<PostInterface[]> {
     const result = await this.postRepository.getItemList(query);
     return result;
   }
@@ -54,28 +59,55 @@ export class PostApiService {
     return result;
   }
 
-  public async updateItem(id: number, dto: UpdatePostDTO): Promise<PostInterface> {
-    const postState = dto.postState ? dto.postState : PostStateEnum.Draft;
-    const userId = 'bla-1234567890-bla';
-    this.postEntity = new PostEntity({ ...dto, userId, postState, tagList: this.getTags(dto.tagList) });
+  public async updateItem(userId: string, id: number, dto: PostDTO): Promise<PostInterface> {
+    if (this.checkOwner(id, userId)) {
+      this.postEntity = new PostEntity({ ...dto, userId, tagList: this.getTags(dto.tagList) });
 
-    const result = await this.postRepository.update(id, this.postEntity);
-    return result;
+     return await this.postRepository.update(id, this.postEntity);
+    }
+     throw new BadRequestException();
   }
 
-  public async deleteItem(id: number): Promise<void>  {
-   await this.postRepository.delete(id);
-
+  public async deleteItem(userId: string, id: number): Promise<void>  {
+    if (this.checkOwner(id, userId)) {
+      await this.postRepository.delete(id);
+    } else {
+       throw new BadRequestException();
+    }
   }
 
-  public async repost(id: number, userId: string): Promise<PostInterface | number> {
+  public async repost( userId: string, id: number): Promise<PostInterface | number> {
     const result = await this.postRepository.repost(id, userId);
+
     return result;
+
   }
 
-  public async switchLike(id: number, userId: string): Promise<boolean> {
+  public async switchLike(userId: string, id: number): Promise<boolean> {
     const result = await this.postRepository.like(id, userId);
     return result;
+  }
+
+  public async search(query: SearchQuery): Promise<PostInterface[]> {
+    const result = await this.postRepository.search(query);
+    return result;
+  }
+
+  public async getDraft(userId: string): Promise<PostInterface[]> {
+    const query = new PostQuery;
+    query.userId = userId;
+    const postState = PostStateEnum.Draft;
+    const result = await this.postRepository.getItemList(query, postState);
+    return result;
+  }
+
+  public async publicationItem(userId: string, id: number): Promise<PostInterface> {
+    if (this.checkOwner(id, userId)) {
+      const result = await this.postRepository.publicationItem(id);
+      return result;
+    } else {
+       throw new BadRequestException();
+    }
   }
 
 }

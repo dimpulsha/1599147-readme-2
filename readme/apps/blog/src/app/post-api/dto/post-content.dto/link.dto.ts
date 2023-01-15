@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
-import { IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { PostValidation, POST_LINK_DESCRIPTION_VIOLATION } from "../../constants/post.constants";
 
 export class LinkDTO {
@@ -20,6 +20,7 @@ export class LinkDTO {
     maxLength: PostValidation.MaxLinkDescription,
   })
   @IsString()
+  @IsOptional()
   @MaxLength(PostValidation.MaxLinkDescription, { message: POST_LINK_DESCRIPTION_VIOLATION})
   linkDescription: string
 }

@@ -1,7 +1,7 @@
 import { SortDirection } from "@readme/shared";
 
 export enum PostValidation {
-  MinPostTitle = 3,
+  MinPostTitle = 20,
   MaxPostTitle = 50,
   MinPostReview = 50,
   MaxPostReview = 255,
@@ -29,6 +29,8 @@ export const CONTENT_TYPE_VIOLATION = 'Invalid content type';
 export const POST_STATE_VIOLATION = 'Invalid post state';
 
 export const DEFAULT_POST_COUNT_LIMIT = 25;
+export const DEFAULT_SEARCH_COUNT_LIMIT = 20;
+
 export const DEFAULT_SORT_DIRECTION = SortDirection.SortDesc;
 
 export enum SortKind {
@@ -39,3 +41,6 @@ export enum SortKind {
 
 export const RABBITMQ_BLOG_SERVICE = Symbol('RABBITMQ_BLOG_SERVICE');
 export const POST_URL_BASE = 'http://localhost:4444/api/blog/';
+
+export const MAX_PHOTO_SIZE = 1024 * 1024;
+export const IMAGE_FILE_TYPE = /image\/(jpeg|png)$/;

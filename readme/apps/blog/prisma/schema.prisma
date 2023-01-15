@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   output = "../../../node_modules/.prisma/client"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -65,7 +66,7 @@ model Content {
 id                  Int @id @default(autoincrement())
 post                Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
 postId              Int @unique
-postName            String?
+postTitle           String?
 postReview          String?
 postText            String?
 linkURL             String?

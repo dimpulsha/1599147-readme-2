@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_FILE_PATH } from './app.constant';
-import { CommentModule } from './comments/content-type.module';
 import { rabbitMqOptions } from './config/rabbit.mq.config';
 import { PostContentTypeModule } from './content-type/content-type.module';
 import { validateEnvironments } from './env-users-config.validation';
@@ -10,8 +9,12 @@ import { PostStorageModule } from './post-storage/post-storage.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './post-api/strategies/jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { getJwtConfig, jwtOptions } from './config/jwt.config';
+import { uploadConfig } from './config/upload.config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { getServeStaticOptions } from './config/serve-static.config';
+import { CommentModule } from './comments/comments.module';
 
 @Module({
   imports: [PrismaModule,
@@ -23,14 +26,19 @@ import { getJwtConfig, jwtOptions } from './config/jwt.config';
       cache: true,
       isGlobal: true,
       envFilePath: ENV_FILE_PATH,
-      load: [rabbitMqOptions, jwtOptions ],
+      load: [rabbitMqOptions, jwtOptions,uploadConfig ],
       validate: validateEnvironments,
   }),
     JwtModule.registerAsync({
       useFactory: getJwtConfig,
       inject: [ConfigService],
     }),
-    PassportModule],
+    PassportModule,
+    ServeStaticModule.forRootAsync({
+      useFactory: getServeStaticOptions,
+      inject: [ConfigService],
+    })],
+
   controllers: [],
   providers: [JwtStrategy],
 })

@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/commo
 import { CreateUserDTO } from './dto/create-user.dto';
 import { BlogUserDBRepository } from '../blog-user/blog-user-db-repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
-import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, RABBITMQ_USER_SERVICE} from './constants/auth-constant';
+import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, RABBITMQ_USER_SERVICE, DEFAULT_AVATAR} from './constants/auth-constant';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
 import { NotifyCommandEnum, UserActionEnum, UserInterface } from '@readme/shared';
@@ -24,7 +24,7 @@ export class AuthService {
     const blogUser = {
       email: dto.email,
       userName: dto.userName,
-      avatarImg: dto.avatarImg ? dto.avatarImg : '',
+      avatarImg: dto.avatarImg ? dto.avatarImg : DEFAULT_AVATAR,
       publicationCount: 0,
       friendsCount: 0,
       registrationDate: dayjs().toDate(),
@@ -68,8 +68,7 @@ export class AuthService {
       throw new UnauthorizedException(AUTH_LOGIN_WRONG);
     }
 
-   return this.loginUser(blogUserEntity.toObject())
-    // return blogUserEntity.toObject();
+    return this.loginUser(blogUserEntity.toObject());
 
   }
 
@@ -141,8 +140,11 @@ export class AuthService {
           return result
 
         default: break;
-
     }
-
   }
+
+  public async updateImg(id: string, fileUrl: string): Promise<UserInterface> {
+    return await this.blogUserRepository.updateImg(id, fileUrl);
+  }
+
 }

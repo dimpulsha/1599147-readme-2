@@ -10,6 +10,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { ClientsModule } from '@nestjs/microservices';
 import { getRabbitMqConfig } from '../../config/rabbit.mq.config';
 import { RABBITMQ_USER_SERVICE } from './constants/auth-constant';
+import { MulterModule } from '@nestjs/platform-express';
+import { getMulterOptions } from '../../config/multer.config';
 
 @Module({
 imports: [
@@ -26,7 +28,11 @@ imports: [
       useFactory: getRabbitMqConfig,
       inject: [ConfigService]
     }
-  ]),
+    ]),
+    MulterModule.registerAsync({
+      useFactory: getMulterOptions,
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
