@@ -8,8 +8,6 @@ import { SubscriberDTO } from './dto/subscriber.dto';
 import { EmailSubscriberRepository } from '../email-user/email-subscriber.repository';
 import { SubscriberEntity } from '../email-user/email-subscriber.entity';
 import { PostNotifyInterface, SubscriberInterface } from '@readme/shared';
-// import { SubscriberEntity } from './email-subscriber.entity';
-// import { EmailSubscriberRepository } from './email-subscriber.repository';
 
 @Injectable()
 export class EmailDataService {

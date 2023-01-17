@@ -24,6 +24,26 @@ export class BlogConfig {
   })
   public RMQ_NOTIFY_SERVICE_QUEUE: string;
 
+    @IsString({
+    message: RabbitConfigValidationMessage.RMQUserRequired
+  })
+  public RMQ_STAT_USER: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQPasswordRequired
+  })
+  public RMQ_STAT_PASSWORD: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQHostRequired
+  })
+  public RMQ_STAT_HOST: string;
+
+  @IsString({
+    message: RabbitConfigValidationMessage.RMQServiceQueueRequired
+  })
+  public RMQ_STAT_QUEUE: string;
+
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {

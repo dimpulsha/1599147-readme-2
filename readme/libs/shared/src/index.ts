@@ -16,3 +16,4 @@ export * from './lib/notify-command-event.enum';
 export * from './lib/mail-command.enum';
 export * from './lib/user-action.enum';
 export * from './lib/friend.interface';
+export * from './lib/user-stat-command-event.enum';

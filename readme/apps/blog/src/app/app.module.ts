@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_FILE_PATH } from './app.constant';
-import { rabbitMqOptions } from './config/rabbit.mq.config';
+import { rabbitMqOptions, rabbitMqStatOptions } from './config/rabbit.mq.config';
 import { PostContentTypeModule } from './content-type/content-type.module';
-import { validateEnvironments } from './env-users-config.validation';
+import { validateEnvironments } from './env-blog-config.validation';
 import { PostApiModule } from './post-api/post-api.module';
 import { PostStorageModule } from './post-storage/post-storage.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -26,7 +26,7 @@ import { CommentModule } from './comments/comments.module';
       cache: true,
       isGlobal: true,
       envFilePath: ENV_FILE_PATH,
-      load: [rabbitMqOptions, jwtOptions,uploadConfig ],
+      load: [rabbitMqOptions, rabbitMqStatOptions, jwtOptions, uploadConfig ],
       validate: validateEnvironments,
   }),
     JwtModule.registerAsync({

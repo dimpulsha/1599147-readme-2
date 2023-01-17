@@ -1,9 +1,9 @@
 import { BadRequestException, Inject, Injectable} from '@nestjs/common';
 import { PostEntity } from '../post-storage/post-entity';
-import { NotifyCommandEnum, PostInterface, PostStateEnum, TagInterface } from '@readme/shared';
+import { NotifyCommandEnum, PostInterface, PostStateEnum, TagInterface, UserStatCommandEnum } from '@readme/shared';
 import { PostRepository } from '../post-storage/post.repository';
 import { PostQuery } from './query/post-query';
-import { POST_URL_BASE, RABBITMQ_BLOG_SERVICE} from './constants/post.constants'
+import { POST_URL_BASE, RABBITMQ_BLOG_SERVICE, RABBITMQ_USER_SERVICE} from './constants/post.constants'
 import { ClientProxy } from '@nestjs/microservices';
 import { PostDTO } from './dto/post.dto';
 import { SearchQuery } from './query/search-query';
@@ -13,7 +13,8 @@ export class PostApiService {
 
   constructor(
     private readonly postRepository: PostRepository,
-    @Inject(RABBITMQ_BLOG_SERVICE) private readonly rabbitClient: ClientProxy
+    @Inject(RABBITMQ_BLOG_SERVICE) private readonly rabbitClient: ClientProxy,
+    @Inject(RABBITMQ_USER_SERVICE) private readonly rabbitUserClient: ClientProxy,
   ) { }
 
   private postEntity: PostEntity;
@@ -27,6 +28,7 @@ export class PostApiService {
   }
 
   private async checkOwner(itemId: number, userId: string): Promise<boolean> {
+    // можно попробовать универсальную функцию с переменным именем (или во все сервисы фиксированный интерфейс с набором имен, как было в Node-1)
     const currentItem = await this.getItem(itemId);
     if (currentItem.userId === userId) return true;
     return false;
@@ -43,6 +45,13 @@ export class PostApiService {
         {
         id: result.id,
         url: postUrl
+      }
+    );
+
+    this.rabbitUserClient.emit(
+      { cmd: UserStatCommandEnum.AddPostStat },
+        {
+        userId: result.userId,
       }
     );
 
@@ -71,8 +80,15 @@ export class PostApiService {
   public async deleteItem(userId: string, id: number): Promise<void>  {
     if (this.checkOwner(id, userId)) {
       await this.postRepository.delete(id);
+
+      this.rabbitUserClient.emit(
+      { cmd: UserStatCommandEnum.AddPostStat },
+        {
+        userId: userId,
+      })
+
     } else {
-       throw new BadRequestException();
+      throw new BadRequestException();
     }
   }
 

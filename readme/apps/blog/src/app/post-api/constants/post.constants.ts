@@ -40,6 +40,8 @@ export enum SortKind {
 }
 
 export const RABBITMQ_BLOG_SERVICE = Symbol('RABBITMQ_BLOG_SERVICE');
+export const RABBITMQ_USER_SERVICE = Symbol('RABBITMQ_USER_SERVICE');
+
 export const POST_URL_BASE = 'http://localhost:4444/api/blog/';
 
 export const MAX_PHOTO_SIZE = 1024 * 1024;

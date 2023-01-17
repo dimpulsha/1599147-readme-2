@@ -8,14 +8,11 @@ import { EMAIL_NEW_POST_SUBJECT } from './constants/mail.constants';
    constructor(private readonly mailerService: MailerService) { }
 
    private preparePostNews(postList: PostNotifyInterface[]): string {
-    //  let newsText = '';
      let result = '';
      postList.forEach((item) => {
         result = result + (`New post with id <a href="${item.url}" target="_blank">${item.id}</a> <br>`)
         return result;
       })
-     console.log(result);
-    //  console.log(newsText);
      return result;
 
    }

@@ -1,7 +1,4 @@
 import { Module } from '@nestjs/common';
-// import { EmailSubscriberRepository } from './email-subscriber.repository';
-// import { MongooseModule } from '@nestjs/mongoose';
-// import { SubscriberModel, SubscriberSchema } from './email-subscriber.model';
 import { MailModule } from '../mail/mail.module';
 import { EmailDataController } from './email-data.controller';
 import { EmailDataService } from './email-data.service';
