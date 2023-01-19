@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { ConfigService, registerAs}  from '@nestjs/config';
 import { RmqOptions, Transport } from '@nestjs/microservices';
 
@@ -44,8 +43,6 @@ import { RmqOptions, Transport } from '@nestjs/microservices';
    const queue = configService.get<string>('rmqStat.statQueue');
    const url = `amqp://${user}:${password}@${host}`;
 
-   Logger.log(url, 'MQ STAT OPTIONS');
-   Logger.log(queue, 'MQ STAT OPTIONS');
    return {
      transport: Transport.RMQ,
      options: {
