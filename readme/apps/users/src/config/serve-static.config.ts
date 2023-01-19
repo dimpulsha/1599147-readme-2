@@ -9,9 +9,6 @@ export function getServeStaticOptions(
 
   const uploadFolder = configService.get<string>('uploadUser.uploadDir');
 
-  const rootPath = join(__dirname, uploadFolder);
-  console.log(rootPath);
-
   return [
     {
       rootPath: join(__dirname, uploadFolder),

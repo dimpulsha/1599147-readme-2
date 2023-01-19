@@ -64,8 +64,7 @@ export class AuthController {
     description: 'The new user is valid'
   })
   public async checkUser(@Param('id', MongoIdValidationPipe) id: string) {
-    console.log(id);
-    Logger.log('accept Post request auth/:id');
+    Logger.log(`accept check request auth/update/ ${id}`);
     return (METHOD_NOT_IMPLEMENTED);
   }
 

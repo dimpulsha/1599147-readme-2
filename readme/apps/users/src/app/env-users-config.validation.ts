@@ -73,8 +73,6 @@ export function validateEnvironments(config: Record<string, unknown>) {
   })
 
   if (validationErrors.length > 0) {
-    console.log(validationErrors);
-
       throw new Error (validationErrors.toString())
   }
 

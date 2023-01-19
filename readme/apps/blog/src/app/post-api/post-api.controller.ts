@@ -401,8 +401,6 @@ export class PostApiController {
 
   public async search(@Query() query: SearchQuery) {
     Logger.log('accept request for search posts');
-    console.log(query);
-
 
     const result = await this.postAPIService.search(query);
     return fillObject(PostListRDO, result)

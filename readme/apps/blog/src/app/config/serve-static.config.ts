@@ -8,9 +8,6 @@ export function getServeStaticOptions(
 ): ServeStaticModuleOptions[] {
   const uploadFolder = configService.get<string>('upload.uploadDir');
 
-  const rootPath = join(__dirname, uploadFolder);
-  console.log(rootPath);
-
   return [
     {
       rootPath: join(__dirname, uploadFolder),

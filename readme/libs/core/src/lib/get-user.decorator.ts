@@ -7,8 +7,6 @@ export const GetUser = createParamDecorator<string, ExecutionContext>(
       return req.user;
     }
 
-    console.log(req.user);
-
     return req.user[data];
   }
 );

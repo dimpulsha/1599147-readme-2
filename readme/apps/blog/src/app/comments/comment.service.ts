@@ -22,8 +22,6 @@ export class CommentService {
 
   public async create(dto: CreateCommentDTO, postId: number, userId: string): Promise<CommentInterface> {
     const commentEntity = new CommentEntity({ ...dto, userId, postId });
-    console.log(commentEntity);
-
     const result = await this.commentRepository.create(commentEntity);
     return result;
   }

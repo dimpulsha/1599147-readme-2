@@ -22,8 +22,6 @@ export class PostApiService {
   private getTags(tags: string[]): TagInterface[] {
 
     const tagList = tags.map((item) => ({ name: item }))
-    console.log(tagList);
-
     return tagList;
   }
 
@@ -82,7 +80,6 @@ export class PostApiService {
 
   public async deleteItem(userId: string, id: number): Promise<void>  {
     if (await this.checkOwner(id, userId)) {
-      console.log('delete');
       await this.postRepository.delete(id);
 
       this.rabbitUserClient.emit(
