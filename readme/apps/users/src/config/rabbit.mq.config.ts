@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { ConfigService, registerAs}  from '@nestjs/config';
 import { RmqOptions, Transport } from '@nestjs/microservices';
 
@@ -8,13 +9,43 @@ import { RmqOptions, Transport } from '@nestjs/microservices';
    queue: process.env.RMQ_NOTIFY_SERVICE_QUEUE,
  }));
 
- export function getRabbitMqConfig(configService: ConfigService): RmqOptions {
+  export const rabbitMqStatOptions = registerAs('rmqStat', () => ({
+  user: process.env.RMQ_STAT_USER,
+  password: process.env.RMQ_STAT_PASSWORD,
+  host: process.env.RMQ_STAT_HOST,
+  statQueue: process.env.RMQ_STAT_QUEUE,
+ }));
+
+  export function getRabbitMqConfig(configService: ConfigService): RmqOptions {
    const user = configService.get<string>('rmq.user');
    const password = configService.get<string>('rmq.password');
    const host = configService.get<string>('rmq.host');
    const queue = configService.get<string>('rmq.queue');
    const url = `amqp://${user}:${password}@${host}`;
 
+   return {
+     transport: Transport.RMQ,
+     options: {
+       urls: [url],
+       queue,
+       persistent: true,
+       noAck: true,
+       queueOptions: {
+         durable: true,
+       }
+     }
+   }
+  }
+
+ export function getRabbitMqStatConfig(configService: ConfigService): RmqOptions {
+   const user = configService.get<string>('rmqStat.user');
+   const password = configService.get<string>('rmqStat.password');
+   const host = configService.get<string>('rmqStat.host');
+   const queue = configService.get<string>('rmqStat.statQueue');
+   const url = `amqp://${user}:${password}@${host}`;
+
+   Logger.log(url, 'MQ STAT OPTIONS');
+   Logger.log(queue, 'MQ STAT OPTIONS');
    return {
      transport: Transport.RMQ,
      options: {

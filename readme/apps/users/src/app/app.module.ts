@@ -8,23 +8,25 @@ import { validateEnvironments } from './env-users-config.validation';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getMongoDbConfig } from '../config/mongo.config';
 import { jwtOptions } from '../config/jwt.config';
-import { rabbitMqOptions } from '../config/rabbit.mq.config';
+import { rabbitMqOptions, rabbitMqStatOptions } from '../config/rabbit.mq.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { getServeStaticOptions } from '../config/serve-static.config';
 import { uploadConfig } from '../config/upload.config';
+import { UserStatModule } from './user-stat/user-stat.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     cache: true,
     isGlobal: true,
     envFilePath: ENV_FILE_PATH,
-    load: [databaseConfig, jwtOptions, rabbitMqOptions, uploadConfig ],
+    load: [databaseConfig, jwtOptions, rabbitMqOptions, rabbitMqStatOptions, uploadConfig ],
     validate: validateEnvironments,
   }),
     MongooseModule.forRootAsync(
       getMongoDbConfig()
     ),
     BlogUserModule,
+    UserStatModule,
     AuthModule,
     ServeStaticModule.forRootAsync({
       useFactory: getServeStaticOptions,

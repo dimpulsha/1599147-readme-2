@@ -14,9 +14,10 @@ export class CommentService {
   ) { }
 
   private async checkOwner(itemId: number, userId: string): Promise<boolean> {
-  const currentItem = await this.getItem(itemId);
-  if (currentItem.userId === userId) return true;
-   return false;
+    const currentItem = await this.getItem(itemId);
+    if (!currentItem) { return false; }
+    if (currentItem.userId === userId) return true;
+    return false;
   }
 
   public async create(dto: CreateCommentDTO, postId: number, userId: string): Promise<CommentInterface> {
@@ -40,22 +41,21 @@ export class CommentService {
   public async updateItem(id: number, dto: UpdateCommentDTO, userId: string): Promise<CommentInterface> {
     const commentEntity = new CommentEntity({ ...dto });
 
-    if (this.checkOwner(id, userId)) {
-     const result = await this.commentRepository.update(id, commentEntity);
-    return result;
-
+    if (await this.checkOwner(id, userId)) {
+      const result = await this.commentRepository.update(id, commentEntity);
+      return result;
+    } else {
+      throw new BadRequestException();
     }
-     throw new BadRequestException();
   }
 
 
   public async deleteItem(id: number, userId: string): Promise<void>  {
-  if(this.checkOwner(id, userId)) {
+  if( await this.checkOwner(id, userId)) {
 
     await this.commentRepository.delete(id);
   } else {
-  throw new BadRequestException();
-  }
-
+    throw new BadRequestException();
+    }
   }
 }

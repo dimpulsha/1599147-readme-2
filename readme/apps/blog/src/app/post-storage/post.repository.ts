@@ -24,7 +24,7 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
   }
 
   public async create(item: PostEntity): Promise<PostInterface> {
-    Logger.log('post.repository : create new entity');
+    Logger.log('post.repository : create new entity', 'POST.Repository');
     const entityData = item.toObject();
 
     const { userId, contentType, content, postState, tagList } = entityData;
@@ -104,8 +104,6 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
   }
 
   public async search({ searchList, limit }: SearchQuery): Promise<PostInterface[]>{
-    console.log(limit);
-
 
     const result = await this.prisma.post.findMany({
       where: {
@@ -138,8 +136,6 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
       },
     });
 
-    console.log(result);
-
     if (result) {
       return this.postTransformation(result);
     }
@@ -149,7 +145,7 @@ export class PostRepository implements CRUDInterface<PostEntity, number, PostInt
   }
 
   public async update(id: number, item: PostEntity): Promise<PostInterface> {
-    Logger.log('post.repository : create new entity');
+    Logger.log('post.repository : create new entity', 'POST.Repository');
     const entityData = item.toObject();
     const currentData = await this.prisma.post.findUnique({
       where: {
@@ -257,7 +253,6 @@ public async publicationItem( id: number): Promise<PostInterface> {
 
     if (isRepost) {
       throw new BadRequestException(`Post ${isRepost.id} has already been reposted`);
-      // return err;
     }
 
     const originPost = await this.prisma.post.findUnique({
@@ -270,7 +265,7 @@ public async publicationItem( id: number): Promise<PostInterface> {
         tags: true,
         postState: true,
       },
-    }
+      }
     );
 
     const { postTitle, postReview, postText, linkURL, photoLink, linkDescription, citeAuthor } = originPost.content;
@@ -317,7 +312,6 @@ public async publicationItem( id: number): Promise<PostInterface> {
       data: {
         repostCount: {increment: 1},
       }
-
     })
 
      return this.postTransformation(result);
@@ -328,7 +322,6 @@ public async publicationItem( id: number): Promise<PostInterface> {
     const like = await this.prisma.likes.findFirst({
       where: { postId: id, userId: userId }
     });
-    console.log(like);
 
     if (like) {
      await this.prisma.post.update({
@@ -360,8 +353,5 @@ public async publicationItem( id: number): Promise<PostInterface> {
     return true;
 
   }
-
-
-
 }
 

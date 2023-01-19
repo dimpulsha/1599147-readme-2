@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     private readonly blogUserRepository: BlogUserDBRepository,
     private readonly jwtService: JwtService,
-    @Inject(RABBITMQ_USER_SERVICE) private readonly rabbitClient: ClientProxy
+    @Inject(RABBITMQ_USER_SERVICE) private readonly rabbitClient: ClientProxy,
   ) { }
 
   public async register(dto: CreateUserDTO): Promise<UserInterface> {

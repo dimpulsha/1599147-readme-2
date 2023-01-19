@@ -65,5 +65,15 @@ export class BlogUserDBRepository implements CRUDInterface<BlogUserEntity, strin
 
     return result;
   }
+
+  public async incPostStat(id: string): Promise<void> {
+    Logger.log(`Increment post count. UserId = ${id}`, 'User Repository');
+     await this.blogUserModel.findByIdAndUpdate({ _id: id }, {$inc: {publicationCount: 1}, }, { new: true }).exec();
+  }
+
+  public async decPostStat(id: string): Promise<void> {
+    Logger.log(`Decrement post count. UserId = ${id}`, 'User Repository');
+     await this.blogUserModel.findByIdAndUpdate({ _id: id }, {$inc: {publicationCount: -1}, }, { new: true }).exec();
+  }
 }
 

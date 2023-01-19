@@ -30,8 +30,11 @@ export class PostApiService {
   private async checkOwner(itemId: number, userId: string): Promise<boolean> {
     // можно попробовать универсальную функцию с переменным именем (или во все сервисы фиксированный интерфейс с набором имен, как было в Node-1)
     const currentItem = await this.getItem(itemId);
-    if (currentItem.userId === userId) return true;
+    if (!currentItem) { return false; }
+    if (currentItem.userId === userId) { return true }
+
     return false;
+
   }
 
   public async create(userId: string, dto: PostDTO): Promise<PostInterface> {
@@ -69,7 +72,7 @@ export class PostApiService {
   }
 
   public async updateItem(userId: string, id: number, dto: PostDTO): Promise<PostInterface> {
-    if (this.checkOwner(id, userId)) {
+    if (await this.checkOwner(id, userId)) {
       this.postEntity = new PostEntity({ ...dto, userId, tagList: this.getTags(dto.tagList) });
 
      return await this.postRepository.update(id, this.postEntity);
@@ -78,11 +81,12 @@ export class PostApiService {
   }
 
   public async deleteItem(userId: string, id: number): Promise<void>  {
-    if (this.checkOwner(id, userId)) {
+    if (await this.checkOwner(id, userId)) {
+      console.log('delete');
       await this.postRepository.delete(id);
 
       this.rabbitUserClient.emit(
-      { cmd: UserStatCommandEnum.AddPostStat },
+      { cmd: UserStatCommandEnum.DeletePostStat },
         {
         userId: userId,
       })
@@ -118,7 +122,7 @@ export class PostApiService {
   }
 
   public async publicationItem(userId: string, id: number): Promise<PostInterface> {
-    if (this.checkOwner(id, userId)) {
+    if (await this.checkOwner(id, userId)) {
       const result = await this.postRepository.publicationItem(id);
       return result;
     } else {
