@@ -102,7 +102,7 @@ export class AuthService {
     const payload = {
       sub: user._id,
       email: user.email,
-      name: user.userName
+      userName: user.userName
     };
 
     return {
@@ -145,6 +145,13 @@ export class AuthService {
 
   public async updateImg(id: string, fileUrl: string): Promise<UserInterface> {
     return await this.blogUserRepository.updateImg(id, fileUrl);
+  }
+
+  public async checkUser(id: string): Promise<UserInterface>  {
+    const result = await this.blogUserRepository.getById(id);
+    return result;
+
+
   }
 
 }

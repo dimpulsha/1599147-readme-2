@@ -61,6 +61,18 @@ export class UserConfig {
   })
   public RMQ_NOTIFY_SERVICE_QUEUE: string;
 
+  @IsString()
+  public SERVICE_HOST: string;
+
+  @IsNumber()
+    @Min(MIN_PORT, {
+    message: `Min port value is ${MIN_PORT}`
+  })
+  @Max(MAX_PORT, {
+    message: `Max port value is ${MAX_PORT}`
+  })
+  public SERVICE_PORT: number;
+
 }
 
 export function validateEnvironments(config: Record<string, unknown>) {

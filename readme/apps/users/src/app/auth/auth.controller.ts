@@ -1,11 +1,11 @@
 import { Body, Controller, FileTypeValidator, Get, HttpCode, HttpStatus, Logger, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { fillObject } from '@readme/core';
+import { fillObject, GetUser } from '@readme/core';
 import { ApiTags, ApiResponse, ApiOperation, ApiCreatedResponse, ApiHeader, ApiBadRequestResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { UserInfoRDO } from './rdo/user-info.rdo';
-import { IMAGE_FILE_TYPE, MAX_PHOTO_SIZE, METHOD_NOT_IMPLEMENTED } from './constants/auth-constant';
+import { IMAGE_FILE_TYPE, MAX_PHOTO_SIZE} from './constants/auth-constant';
 import { MongoIdValidationPipe } from '../pipes/mongo-validation.pipe';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
@@ -26,7 +26,7 @@ export class AuthController {
     description: 'The new user has been successfully created.'
   })
   public async create(@Body() dto: CreateUserDTO) {
-    Logger.log('accept request auth/register');
+    Logger.log('accept request auth/register', `${AuthController.name}`);
     const newUser = this.authService.register(dto);
     return fillObject(UserInfoRDO, newUser);
 }
@@ -39,7 +39,7 @@ export class AuthController {
     description: 'The user has been successfully logged.'
   })
   public async login(@Body() dto: LoginUserDTO) {
-    Logger.log('accept request auth/login');
+    Logger.log('accept request auth/login', `${AuthController.name}`);
     const user = await this.authService.verifyUser(dto);
     return user;
   }
@@ -52,20 +52,22 @@ export class AuthController {
     description: 'Get user information'
   })
   public async getUser(@Param('id', MongoIdValidationPipe) id: string) {
-    Logger.log('accept Get request auth/:id');
+    Logger.log('accept Get request auth/:id', `${AuthController.name}`);
     const result = this.authService.getUser(id);
     return fillObject(UserInfoRDO, result);
   }
 
-  @Post(':id')
+  @UseGuards(JwtAuthGuard)
+  @Post('check')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'The new user is valid'
+    description: 'The user is valid'
   })
-  public async checkUser(@Param('id', MongoIdValidationPipe) id: string) {
-    Logger.log(`accept check request auth/update/ ${id}`);
-    return (METHOD_NOT_IMPLEMENTED);
+  public async checkUser(@GetUser('id') id: string) {
+    Logger.log(`Accept user check request`, `${AuthController.name}`);
+    const result = this.authService.getUser(id);
+    return fillObject(UserInfoRDO, result);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -77,7 +79,7 @@ export class AuthController {
   })
   public async update(@Param('id', MongoIdValidationPipe) id: string, @Body() dto: UpdatePasswordDTO) {
 
-    Logger.log(`accept update auth/update/ ${id}`);
+    Logger.log(`accept update auth/update/ ${id}`, `${AuthController.name}`);
     const result = await this.authService.updatePWD(id, dto);
     return fillObject(UserInfoRDO, result);
   }
@@ -89,7 +91,7 @@ export class AuthController {
     description: 'Update post counter'
   })
   public async updatePostStats(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
-    Logger.log(`accept update auth/update/ ${id}`);
+    Logger.log(`accept update auth/update/ ${id}`, `${AuthController.name}`);
     const result = await this.authService.updatePostStats(id, query);
     return result;
   }
@@ -101,7 +103,7 @@ export class AuthController {
     description: 'Update post counter'
   })
   public async updateFriends(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
-    Logger.log(`accept update auth/update/ ${id}`);
+    Logger.log(`accept update auth/update/ ${id}`, `${AuthController.name}`);
     const result = await this.authService.updateFriends(id, query);
     return result;
   }

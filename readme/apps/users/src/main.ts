@@ -26,10 +26,11 @@ async function bootstrap() {
   SwaggerModule.setup('spec', app, document)
   app.useGlobalPipes(new ValidationPipe());
 
-  const port = process.env.PORT || 3333;
+  const port = process.env.SERVICE_PORT;
+  const host = process.env.SERVICE_HOST
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://${host}:${port}/${globalPrefix}`
   );
 }
 
