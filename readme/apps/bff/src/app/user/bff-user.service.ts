@@ -4,6 +4,8 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from "rxjs";
 import { AxiosError } from 'axios'
 import { getUserConfig } from "../config/bff.config";
+import { getServiceUrl } from '@readme/core'
+
 
 @Injectable()
 export class BffUserService {
@@ -23,16 +25,15 @@ export class BffUserService {
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService
-
   ) { }
 
-  private userConfig = getUserConfig(this.configService);
+  private userServiceUrl = getServiceUrl(getUserConfig(this.configService));
 
   public async registerUser(body: Request) {
     const { data } = await firstValueFrom(
 
       this.httpService
-        .post(`http://${this.userConfig.host}:${this.userConfig.port}/api/auth/register `, body)
+        .post(`${this.userServiceUrl}/api/auth/register`, body)
         .pipe(catchError(this.handleError))
     );
 
