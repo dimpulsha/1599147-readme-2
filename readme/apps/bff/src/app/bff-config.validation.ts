@@ -49,9 +49,7 @@ export function validateEnvironments(config: Record<string, unknown>) {
   const userConfigItem = plainToInstance(BffConfig, config, {
     enableImplicitConversion: true,
   });
-
-  console.log( userConfigItem );
-
+  
   const validationErrors = validateSync(userConfigItem, {
     skipMissingProperties: false
   })

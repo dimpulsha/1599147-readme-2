@@ -12,17 +12,18 @@ export const bffConfig = registerAs('bff', () => ({
 }));
 
 export function getUserConfig(configService: ConfigService) {
-  return {
+ const bffUserConfig =  {
     host: configService.get<string>('bff.userHost'),
     port: configService.get<string>('bff.userPort'),
-  }
+ }
+  return bffUserConfig;
 }
 
 export function getBlogConfig(configService: ConfigService) {
-  return {
+  return ({
     host: configService.get<string>('bff.blogHost'),
     port: configService.get<string>('bff.blogPort'),
-  }
+  })
 }
 
 export function getNotifyConfig(configService: ConfigService) {

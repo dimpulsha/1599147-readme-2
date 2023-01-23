@@ -1,0 +1,13 @@
+#Пользователь
+## Создать пользователя
+POST http://localhost:7777/api/user/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "51@fill.com",
+  "userName": "John Snow",
+  "avatarImg": "test.img",
+  "password": "123456"
+
+}
+###

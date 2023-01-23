@@ -28,6 +28,10 @@ async function bootstrap() {
 
   const port = process.env.SERVICE_PORT;
   const host = process.env.SERVICE_HOST
+  console.log(port);
+  console.log(host);
+
+
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://${host}:${port}/${globalPrefix}`
