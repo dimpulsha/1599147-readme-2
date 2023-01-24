@@ -17,6 +17,8 @@ import { STATIC_ROOT_PATH } from '../app.constant';
 @Controller('auth')
 export class AuthController {
 
+  private readonly logger = new Logger(AuthController.name);
+
   constructor ( private readonly authService: AuthService) {}
 
   @Post('register')
@@ -26,7 +28,7 @@ export class AuthController {
     description: 'The new user has been successfully created.'
   })
   public async create(@Body() dto: CreateUserDTO) {
-    Logger.log('accept request auth/register', `${AuthController.name}`);
+    this.logger.log('accept request auth/register');
     const newUser = this.authService.register(dto);
     return fillObject(UserInfoRDO, newUser);
 }
@@ -39,7 +41,7 @@ export class AuthController {
     description: 'The user has been successfully logged.'
   })
   public async login(@Body() dto: LoginUserDTO) {
-    Logger.log('accept request auth/login', `${AuthController.name}`);
+    this.logger.log('accept request auth/login');
     const user = await this.authService.verifyUser(dto);
     return user;
   }
@@ -52,7 +54,7 @@ export class AuthController {
     description: 'Get user information'
   })
   public async getUser(@Param('id', MongoIdValidationPipe) id: string) {
-    Logger.log('accept Get request auth/:id', `${AuthController.name}`);
+    this.logger.log('accept Get request auth/:id');
     const result = this.authService.getUser(id);
     return fillObject(UserInfoRDO, result);
   }
@@ -65,7 +67,7 @@ export class AuthController {
     description: 'The user is valid'
   })
   public async checkUser(@GetUser('id') id: string) {
-    Logger.log(`Accept user check request`, `${AuthController.name}`);
+    this.logger.log(`Accept user check request`);
     const result = this.authService.getUser(id);
     return fillObject(UserInfoRDO, result);
   }
@@ -79,22 +81,22 @@ export class AuthController {
   })
   public async update(@Param('id', MongoIdValidationPipe) id: string, @Body() dto: UpdatePasswordDTO) {
 
-    Logger.log(`accept update auth/update/ ${id}`, `${AuthController.name}`);
+    this.logger.log(`accept update auth/update/ ${id}`);
     const result = await this.authService.updatePWD(id, dto);
     return fillObject(UserInfoRDO, result);
   }
 
-  @Patch('updatePostsStat/:id')
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Update post counter'
-  })
-  public async updatePostStats(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
-    Logger.log(`accept update auth/update/ ${id}`, `${AuthController.name}`);
-    const result = await this.authService.updatePostStats(id, query);
-    return result;
-  }
+  // @Patch('updatePostsStat/:id')
+  // @HttpCode(HttpStatus.OK)
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   description: 'Update post counter'
+  // })
+  // public async updatePostStats(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
+  //   Logger.log(`accept update auth/update/ ${id}`, `${AuthController.name}`);
+  //   const result = await this.authService.updatePostStats(id, query);
+  //   return result;
+  // }
 
   @Patch('updateFriends/:id')
   @HttpCode(HttpStatus.OK)
@@ -103,7 +105,7 @@ export class AuthController {
     description: 'Update post counter'
   })
   public async updateFriends(@Param('id', MongoIdValidationPipe) id: string, @Query() query: UserActionQuery) {
-    Logger.log(`accept update auth/update/ ${id}`, `${AuthController.name}`);
+    this.logger.log(`accept update auth/update/ ${id}`);
     const result = await this.authService.updateFriends(id, query);
     return result;
   }

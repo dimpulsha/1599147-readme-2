@@ -4,10 +4,25 @@ POST http://localhost:7777/api/user/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "52@fill.com",
+  "email": "92@fill.com",
   "userName": "John Snow",
   "avatarImg": "test.img",
   "password": "123456"
-
 }
+
+###
+## Логин
+POST http://localhost:7777/api/user/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "42@fill.com",
+  "password": "123456"
+}
+###
+## Запрос информации
+GET http://localhost:7777/api/user/63bb01070076cbc12aaef020 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JiMDEwNzAwNzZjYmMxMmFhZWYwMjAiLCJlbWFpbCI6IjQ3QGZpbGwuY29tIiwibmFtZSI6IkpvaG4gU25vdyIsImlhdCI6MTY3NDE0OTQ1NiwiZXhwIjoxNjc1MDEzNDU2fQ.wBLKQ3zaHUWJAMfZltnKrZgOQnKOVnhWF0CfDQLUc4A
+
 ###

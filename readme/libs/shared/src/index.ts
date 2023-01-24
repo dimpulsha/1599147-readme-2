@@ -17,4 +17,5 @@ export * from './lib/mail-command.enum';
 export * from './lib/user-action.enum';
 export * from './lib/friend.interface';
 export * from './lib/user-stat-command-event.enum';
-export * from './lib/service-url-config.type'
+export * from './lib/service-url-config.type';
+export * from './lib/constants/user-violation.msg';

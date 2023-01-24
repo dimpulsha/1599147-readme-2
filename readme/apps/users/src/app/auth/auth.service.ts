@@ -3,10 +3,10 @@ import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/commo
 import { CreateUserDTO } from './dto/create-user.dto';
 import { BlogUserDBRepository } from '../blog-user/blog-user-db-repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
-import { AUTH_USER_EXISTS, AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, RABBITMQ_USER_SERVICE, DEFAULT_AVATAR} from './constants/auth-constant';
+import { RABBITMQ_USER_SERVICE, DEFAULT_AVATAR } from './constants/auth-constant';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { UpdatePasswordDTO } from './dto/update-pwd.dto';
-import { NotifyCommandEnum, UserActionEnum, UserInterface } from '@readme/shared';
+import { AUTH_LOGIN_WRONG, AUTH_NOT_FOUND, AUTH_USER_EXISTS, NotifyCommandEnum, UserActionEnum, UserInterface } from '@readme/shared';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserActionQuery } from './query/users-action.query';

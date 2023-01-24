@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { FriendInterface, UserInterface } from '@readme/shared';
 import { genSalt, compare, hash } from 'bcrypt';
 import { SALT_ROUNDS } from './blog-user.constant';
@@ -18,8 +17,6 @@ export class BlogUserEntity implements UserInterface {
   }
 
   public toObject() {
-    Logger.log('BlogUserEntity: toObject');
-    Logger.log({ ...this });
     return { ...this };
   }
 
